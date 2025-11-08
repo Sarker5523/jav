@@ -255,7 +255,7 @@
         description: d.description || 'No description.',
         thumbnail: d.background?.full || 'https://via.placeholder.com/300x200?text=No+Image',
         trailer: d.trailer || '',
-        videoId: sceneItem.video_id?.trim() || '',
+        videoId: (sceneItem.video_id || sceneItem.Video_Id || sceneItem.Video_ID || '').trim(),
         slug: sceneItem.slug?.trim() || '',
         performers,
         studioChain
