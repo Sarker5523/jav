@@ -87,37 +87,47 @@ def main():
     videos = load_json(input_path)
     print(f"[+] Loaded {len(videos)} videos from '{INPUT_FILE}'")
 
-    # Normalize keys
+    # Normalize keys (preserve both slug and video_id if present)
     for v in videos:
-        raw_key = v.get('slug') or v.get('video_id')
-        v['_raw_key'] = raw_key
-        v['_norm_key'] = normalize_id(raw_key)
+        v['_slug'] = v.get('slug')
+        v['_video_id'] = v.get('video_id')
+        v['_norm_key'] = normalize_id(v.get('slug') or v.get('video_id'))  # Fallback to one for dedup
 
     # Load existing output
     existing = load_json(Path(OUTPUT_FILE))
     existing_map = {}
     for obj in existing:
-        key = normalize_id(obj.get('slug') or obj.get('video_id'))
+        slug_norm = normalize_id(obj.get('slug'))
+        video_norm = normalize_id(obj.get('video_id'))
+        # Use slug if present, else video_id, for the map key (keeps it simple)
+        key = slug_norm or video_norm
         if key:
             existing_map[key] = obj
 
     # Determine what to fetch
     to_fetch = []
     for v in videos:
+        slug = v.get('_slug')
+        video_id = v.get('_video_id')
         norm_key = v['_norm_key']
         scene_id = v.get('scene_id')
-        key_name = 'slug' if 'slug' in v else 'video_id'
 
         if not norm_key or not scene_id:
             print(f"[!] Skipping invalid: {v}")
             continue
-        if norm_key not in existing_map:
-            to_fetch.append({
-                'raw_key': v['_raw_key'],
-                'norm_key': norm_key,
-                'scene_id': scene_id,
-                'key_name': key_name
-            })
+
+        # Skip if either key already exists in output
+        slug_norm = normalize_id(slug)
+        video_norm = normalize_id(video_id)
+        if (slug_norm and slug_norm in existing_map) or (video_norm and video_norm in existing_map):
+            continue
+
+        to_fetch.append({
+            'slug': slug,
+            'video_id': video_id,
+            'norm_key': norm_key,
+            'scene_id': scene_id
+        })
 
     if not to_fetch:
         print("[+] All scenes up to date.")
@@ -128,12 +138,10 @@ def main():
     new_results = []
     failed = []
     for idx, item in enumerate(to_fetch, 1):
-        raw_key = item['raw_key']
         scene_id = item['scene_id']
-        key_name = item['key_name']
         url = f"https://api.theporndb.net/jav/{scene_id}?add_to_collection=true"
 
-        print(f"[{idx}] {raw_key} → {scene_id}", end='')
+        print(f"[{idx}] {item.get('slug', 'N/A')} / {item.get('video_id', 'N/A')} → {scene_id}", end='')
 
         success = False
         for attempt in range(1, MAX_RETRIES + 1):
@@ -193,10 +201,13 @@ def main():
                 if site_min:
                     scene_data['site'] = site_min
 
-                scene_obj = {
-                    key_name: raw_key,
-                    'data': scene_data
-                }
+                # Build scene_obj with keys at the top, then data
+                scene_obj = {}
+                if item.get('slug'):
+                    scene_obj['slug'] = item['slug']
+                if item.get('video_id'):
+                    scene_obj['video_id'] = item['video_id']
+                scene_obj['data'] = scene_data
 
                 new_results.append(remove_empty(scene_obj))
                 print(" OK")
@@ -210,8 +221,8 @@ def main():
                 else:
                     print(f"FAILED: {e}")
                     failed.append({
-                        'raw_key': raw_key,
-                        'clean_key': item['norm_key'],
+                        'slug': item.get('slug'),
+                        'video_id': item.get('video_id'),
                         'scene_id': scene_id,
                         'error': str(e)
                     })
