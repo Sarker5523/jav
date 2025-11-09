@@ -6,13 +6,11 @@
   <title>Video Details</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
-
   <!-- CUSTOM BUTTON STYLE -->
   <style>
     :root {
       --color-back: #1a1a1a;
     }
-
     .button {
       background: var(--color-back);
       border-radius: 0.5em;
@@ -70,7 +68,6 @@
   </style>
 </head>
 <body class="bg-gray-900">
-
   <!-- Navbar -->
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -127,24 +124,20 @@
       </div>
     </div>
   </nav>
-
   <!-- Video Content -->
   <div class="content-wrapper max-w-4xl mx-auto p-4">
     <div id="video-details"></div>
   </div>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
   <script>
     const CACHE_TTL = 24 * 60 * 60 * 1000;
     let db = null;
     let searchTimeout;
-
-    const searchInput            = document.getElementById('search-navbar');
-    const searchInputMobile      = document.getElementById('search-navbar-mobile');
-    const searchSuggestions      = document.getElementById('search-suggestions');
+    const searchInput = document.getElementById('search-navbar');
+    const searchInputMobile = document.getElementById('search-navbar-mobile');
+    const searchSuggestions = document.getElementById('search-suggestions');
     const searchSuggestionsMobile = document.getElementById('search-suggestions-mobile');
-    const videoDetails           = document.getElementById('video-details');
-
+    const videoDetails = document.getElementById('video-details');
     // ---------- IndexedDB ----------
     async function initDB() {
       try {
@@ -160,7 +153,6 @@
         });
       } catch (e) { console.warn('DB init failed', e); }
     }
-
     async function getCache(id) {
       if (!db || !id) return null;
       return new Promise(res => {
@@ -174,13 +166,11 @@
         req.onerror = () => res(null);
       });
     }
-
     async function putCache(id, payload) {
       if (!db || !id) return;
       const tx = db.transaction('videos', 'readwrite');
       tx.objectStore('videos').put({ id, payload, ts: Date.now() });
     }
-
     // ---------- Load All Data ----------
     async function loadAllData() {
       const [scenesRes, performersRes, sitesRes] = await Promise.all([
@@ -194,22 +184,17 @@
       sitesRes.forEach(s => { if (s.id != null) sitesById[s.id] = s; });
       return { scenes: scenesRes, performersById, sitesById };
     }
-
     // ---------- Load Video ----------
     async function loadVideo() {
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
       if (!id) { videoDetails.innerHTML = '<p class="text-red-400">No video ID</p>'; return; }
-
       const cached = await getCache(id);
       if (cached) { renderVideo(cached); return; }
-
       const { scenes, performersById, sitesById } = await loadAllData();
       const sceneItem = scenes.find(s => String(s.data?._id) === id);
       if (!sceneItem) { videoDetails.innerHTML = '<p class="text-red-400">Video not found</p>'; return; }
-
       const d = sceneItem.data;
-
       // === PERFORMERS ===
       const perfRaw = d.performers || [];
       const perfArray = Array.isArray(perfRaw) ? perfRaw : [perfRaw].filter(Boolean);
@@ -222,13 +207,11 @@
         performers.push({ name: p.name || 'Unknown', id: pid });
       });
       if (!performers.length) performers.push({ name: 'Unknown Performer', id: 0 });
-
       // === STUDIO CHAIN ===
       const siteId = d.site?.id;
       const site = siteId != null ? sitesById[siteId] : null;
       const studioChain = [];
       if (site?.name) studioChain.push({ name: site.name, id: site.id });
-
       let parentName = null, parentId = null;
       if (d.site?.parent_id != null) {
         const p = sitesById[d.site.parent_id];
@@ -237,7 +220,6 @@
       if (!parentName && site?.parent?.name) { parentName = site.parent.name; parentId = site.parent.id; }
       if (parentName && parentName !== studioChain[0]?.name)
         studioChain.push({ name: parentName, id: parentId || 0 });
-
       let networkName = null, networkId = null;
       if (d.site?.network_id != null) {
         const n = sitesById[d.site.network_id];
@@ -246,9 +228,7 @@
       if (!networkName && site?.network?.name) { networkName = site.network.name; networkId = site.network.id; }
       if (networkName && !studioChain.some(s => s.name === networkName))
         studioChain.push({ name: networkName, id: networkId || 0 });
-
       if (!studioChain.length) studioChain.push({ name: 'Unknown Studio', id: 0 });
-
       const payload = {
         id: String(d._id),
         title: (d.title || 'Untitled').trim(),
@@ -260,80 +240,65 @@
         performers,
         studioChain
       };
-
       await putCache(id, payload);
       renderVideo(payload);
     }
-
     // ---------- Render Video ----------
     function renderVideo(v) {
       const hasUPN = !!v.videoId;
       const hasAbyss = !!v.slug;
       const showSwitcher = hasUPN && hasAbyss;
-
       const defaultSrc = hasUPN
         ? `https://purn.upn.one/#${v.videoId}`
         : `https://short.icu/${v.slug}`;
-
       const performersHtml = v.performers
         .map(p => p.id
           ? `<a href="performer.html?name=${encodeURIComponent(p.name)}" class="text-green-400 hover:underline">${escapeHtml(p.name)}</a>`
           : `<span class="text-gray-500">${escapeHtml(p.name)}</span>`
         )
         .join(' , ');
-
       const studioHtml = v.studioChain
         .map((s, i) => s.id && i === 0
           ? `<a href="site.html?id=${s.id}" class="text-green-400 hover:underline">${escapeHtml(s.name)}</a>`
           : `<span class="text-green-400">${escapeHtml(s.name)}</span>`
         )
         .join(' → ');
-
       videoDetails.innerHTML = `
         <div class="video-embed mb-6 aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
           <iframe id="video-iframe" src="${defaultSrc}" class="w-full h-full" frameborder="0"
                   allow="fullscreen; autoplay; encrypted-media; picture-in-picture"></iframe>
         </div>
-
         ${showSwitcher ? `
           <div id="source-switcher" class="flex justify-center gap-4 my-4">
             <button id="btn-upnshare" class="button"><div class="text">UPNShare</div></button>
             <button id="btn-abyss" class="button"><div class="text">Abyss</div></button>
           </div>
         ` : ''}
-
         <h1 class="text-2xl md:text-3xl font-bold text-white mb-3">${escapeHtml(v.title)}</h1>
         <p class="text-gray-300 mb-4 leading-relaxed">${escapeHtml(v.description)}</p>
         <p class="text-sm text-gray-400 mb-1">Studio: ${studioHtml}</p>
         <p class="text-sm text-gray-400 mb-6">Performers: ${performersHtml}</p>
-
         ${v.trailer ? `
-          <video controls poster="${v.thumbnail}" class="w-full rounded-lg mb-4 shadow-md">
-            <source src="${v.trailer}" type="video/mp4">
-            Your browser does not support video.
-          </video>
+          <div class="aspect-video bg-black rounded-lg overflow-hidden shadow-md mb-4">
+            <iframe src="${v.trailer}" class="w-full h-full" frameborder="0" allow="fullscreen; autoplay; encrypted-media; picture-in-picture"></iframe>
+          </div>
         ` : ''}
       `;
-
       if (showSwitcher) {
         const iframe = document.getElementById('video-iframe');
         const btnUPN = document.getElementById('btn-upnshare');
         const btnAbyss = document.getElementById('btn-abyss');
-
         const setSource = (src, type) => {
           if (iframe.src === src) return;
           iframe.src = src;
           btnUPN.classList.toggle('active', type === 'upnshare');
           btnAbyss.classList.toggle('active', type === 'abyss');
         };
-
         btnUPN.addEventListener('click', () => setSource(`https://purn.upn.one/#${v.videoId}`, 'upnshare'));
         btnAbyss.addEventListener('click', () => setSource(`https://short.icu/${v.slug}`, 'abyss'));
-
         document.getElementById(hasUPN ? 'btn-upnshare' : 'btn-abyss').classList.add('active');
       }
     }
-
     // ---------- Search ----------
     async function ensureSearchIndex() {
       if (localStorage.getItem('searchIndex')) return;
@@ -356,12 +321,10 @@
       }).filter(Boolean);
       localStorage.setItem('searchIndex', JSON.stringify(index));
     }
-
     function debouncedSearch() {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(handleSearch, 300);
     }
-
     async function handleSearch() {
       const q = (searchInput?.value || searchInputMobile?.value || '').trim().toLowerCase();
       if (!q) { hideSuggestions(); return; }
@@ -373,7 +336,6 @@
       renderSuggestions(searchSuggestions, results);
       renderSuggestions(searchSuggestionsMobile, results);
     }
-
     function renderSuggestions(container, list) {
       container.innerHTML = list.length
         ? list.map(v => `
@@ -389,31 +351,26 @@
         : '<div class="p-2 text-sm text-gray-400">No results</div>';
       container.classList.toggle('hidden', !list.length);
     }
-
     function hideSuggestions() {
       searchSuggestions.classList.add('hidden');
       searchSuggestionsMobile.classList.add('hidden');
     }
-
     function handleEnter(e) {
       if (e.key === 'Enter') {
         const q = (searchInput?.value || searchInputMobile?.value || '').trim();
         if (q) location.href = `search.html?query=${encodeURIComponent(q)}`;
       }
     }
-
     function escapeHtml(str) {
       const div = document.createElement('div');
       div.textContent = str;
       return div.innerHTML;
     }
-
     // ---------- Init ----------
     initDB().finally(() => {
       loadVideo();
       ensureSearchIndex();
     });
-
     searchInput?.addEventListener('input', debouncedSearch);
     searchInputMobile?.addEventListener('input', debouncedSearch);
     document.addEventListener('keydown', handleEnter);
