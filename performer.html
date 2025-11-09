@@ -75,11 +75,11 @@
   /* TITLE OVERLAY - SAME AS PERFORMER LIST */
   .video-item .name-overlay {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
-    padding: 2rem 1rem 1rem;
+    background: rgba(0, 0, 0, 0.363);
+    padding: 0.5rem 1rem;
     color: white;
     font-size: 0.95rem;
     font-weight: 700;
@@ -93,24 +93,52 @@
     text-overflow: ellipsis;
   }
 
-  /* VIDEO COUNT BADGE - ONLY ON PERFORMER LIST */
-  .performer-count-box {
+  /* TOP INFO CONTAINER - HOLDS COUNT + NAME SIDE-BY-SIDE */
+  .top-info {
     position: absolute;
     top: 10px;
     left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between name and badge */
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent bg for readability */
+    padding: 6px 10px;
+    border-radius: 8px;
+    z-index: 10;
+    max-width: calc(100% - 20px); /* Prevent overflow off the image */
+  }
+
+  /* NAME TEXT BESIDE BADGE */
+  .performer-name {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    white-space: nowrap; /* Keep on one line */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Truncate long names with ... */
+    max-width: 180px; /* Limits name length to fit beside badge */
+    line-height: 1.2; /* Ensure consistent vertical alignment */
+  }
+
+  /* VIDEO COUNT BADGE - NOW HOLDS "Videos: 03" */
+  .performer-count-box {
     background-color: hsl(152, 76%, 45%);
     color: #fff;
-    min-width: 40px;
-    height: 26px;
-    line-height: 26px;
-    border-radius: 13px;
-    font-size: 0.75rem;
+    min-width: 70px; /* Wider for "Videos: 03" text */
+    height: 24px;
+    line-height: 24px; /* Center text vertically */
+    border-radius: 12px;
+    font-size: 0.75rem; /* Smaller font to fit longer text */
     font-weight: 700;
     text-align: center;
-    padding: 0 10px;
+    padding: 0 8px; /* Balanced padding for the text */
     box-shadow: 0 3px 10px rgba(0,0,0,0.7);
-    z-index: 10;
     font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* No position - flex child in .top-info */
   }
 
   /* RESPONSIVE - MOBILE FIRST, FREE-FORM ALWAYS */
@@ -131,13 +159,22 @@
       padding: 1.6rem 0.8rem 0.8rem;
       font-size: 0.85rem;
     }
-    .performer-count-box {
-      min-width: 34px;
-      height: 22px;
-      line-height: 22px;
-      font-size: 0.68rem;
+    .top-info {
       top: 8px;
       left: 8px;
+      padding: 4px 8px;
+      gap: 6px;
+    }
+    .performer-name {
+      font-size: 0.8rem;
+      max-width: 140px;
+    }
+    .performer-count-box {
+      min-width: 65px;
+      height: 22px;
+      line-height: 22px;
+      font-size: 0.7rem;
+      padding: 0 6px;
     }
   }
 
@@ -153,11 +190,25 @@
       line-clamp: 3;
       -webkit-line-clamp: 3;
     }
+    .top-info {
+      top: 6px;
+      left: 6px;
+      padding: 3px 6px;
+      gap: 4px;
+      flex-direction: column; /* Stack vertically on tiny screens if needed */
+      align-items: flex-start;
+    }
+    .performer-name {
+      font-size: 0.85rem;
+      max-width: 120px;
+      white-space: normal; /* Allow wrap if stacked */
+    }
     .performer-count-box {
-      min-width: 38px;
-      height: 24px;
-      line-height: 24px;
-      font-size: 0.72rem;
+      min-width: 60px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 0.65rem;
+      padding: 0 5px;
     }
   }
 
@@ -314,21 +365,6 @@
   <!-- PAGINATION BOTTOM -->
   <div class="pagination-wrapper"><div class="pagination" id="pagination-bottom"></div></div>
 
-  <!-- CLEAR CACHE -->
-  <div class="fixed bottom-6 right-6 z-50">
-    <button id="clear-cache-btn"
-            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 transition">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M4 4v5h5m10 11v-5h-5m-7 2a9 9 0 1118 0 9 9 0 01-18 0z"/>
-      </svg>
-      Clear Cache
-    </button>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast-container" class="fixed bottom-4 left-4 z-50 space-y-2"></div>
-
   <!-- FLOWBITE JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
 
@@ -351,14 +387,6 @@
     function getSingleName() { return getParams().get('name'); }
 
     async function buildPerformerList() {
-      const cached = localStorage.getItem('female_performers_v5');
-      if (cached) {
-        const data = JSON.parse(cached);
-        allPerformers = data.performers || [];
-        performerMap = new Map(allPerformers.map(p => [p.id, p]));
-        if (allPerformers.length) return;
-      }
-
       const [performersRes, scenesRes] = await Promise.all([
         fetch('performer.json').then(r => r.ok ? r.json() : []),
         fetch('scene_details.json').then(r => r.ok ? r.json() : [])
@@ -400,7 +428,6 @@
       allPerformers = Array.from(baseMap.values())
         .sort((a, b) => a.name.localeCompare(b.name));
       performerMap = new Map(allPerformers.map(p => [p.id, p]));
-      localStorage.setItem('female_performers_v5', JSON.stringify({ performers: allPerformers }));
     }
 
     function renderSinglePerformer(p) {
@@ -453,8 +480,10 @@
                         alt="${escapeHtml(p.name)}"
                         loading="lazy"
                         onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                   <div class="name-overlay">${escapeHtml(p.name)}</div>
-                   ${p.videoCount > 0 ? `<div class="performer-count-box">${p.videoCount}</div>` : ''}
+                   <div class="top-info">
+                     <div class="performer-name">${escapeHtml(p.name)}</div>
+                     ${p.videoCount > 0 ? `<div class="performer-count-box">Videos: ${p.videoCount.toString().padStart(2, '0')}</div>` : ''}
+                   </div>
                  </a>
                </div>`).join('')}
            </div>`
@@ -541,21 +570,6 @@
         if (q) location.href = `search.html?query=${encodeURIComponent(q)}`;
       }
     }
-
-    function showToast(msg, type = 'success') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `flex items-center w-full max-w-xs p-4 mb-4 text-white rounded-lg shadow ${type==='error'?'bg-red-600':'bg-green-600'}`;
-      toast.innerHTML = `<span class="text-sm">${msg}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
-
-    document.getElementById('clear-cache-btn').addEventListener('click', () => {
-      localStorage.removeItem('female_performers_v5');
-      showToast('Cache cleared – reloading…', 'success');
-      setTimeout(() => location.reload(), 1000);
-    });
 
     function escapeHtml(str) {
       const div = document.createElement('div');
