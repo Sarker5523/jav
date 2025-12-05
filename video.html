@@ -5,248 +5,415 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Video Details</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css">
+  <!-- CUSTOM BUTTON STYLE -->
   <style>
-    :root { --color-back: #1a1a1a; }
+    :root {
+      --color-back: #1a1a1a;
+    }
+  
     .button {
       background: var(--color-back);
       border-radius: 0.5em;
-      box-shadow: inset rgba(54,69,75,1) -1px -1px 6px 0px, rgb(55,72,78) -1px -1px 6px 0px;
+      box-shadow:
+        inset 0px -6px 18px -6px rgba(3, 15, 20, 0),
+        inset rgba(54, 69, 75, 1) -1px -1px 6px 0px,
+        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
+        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
+        rgb(55, 72, 78) -1px -1px 6px 0px;
       border: solid 2px #030f14;
       cursor: pointer;
       font-size: 16px;
-      padding: 0.5em 1.2em;
+      padding: 0.4em 0.9em;
       outline: none;
       transition: all 0.3s;
       user-select: none;
-      min-width: 120px;
+      display: inline-block;
+      min-width: 100px;
+      margin: 0 12px;
     }
-    .button:hover { box-shadow: inset 0 -6px 18px -6px #030f14, inset 0 6px 18px -6px #030f14, -1px -1px 6px 0px #0099ff; }
-    .button:active, .button.active {
-      box-shadow: inset 0 -12px 20px -6px #030f14, inset 0 12px 20px -6px #030f14, -1px -1px 8px 0px #0099ff;
+    .button:hover {
+      box-shadow:
+        inset 0px -6px 18px -6px rgba(3, 15, 20, 1),
+        inset 0px 6px 18px -6px rgba(3, 15, 20, 1),
+        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
+        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
+        -1px -1px 6px 0px rgb(0, 153, 255);
     }
-    .button .text { color: #d0a756; font-weight: 700; transition: transform 0.3s; }
-    .button:hover .text { transform: scale(0.92); }
-    .button:active .text { transform: scale(0.85); }
+    .button:active {
+      box-shadow:
+        inset 0px -12px 12px -6px rgba(3, 15, 20, 1),
+        inset 0px 12px 12px -6px rgba(3, 15, 20, 1),
+        inset 12px 0px 12px -6px rgba(3, 15, 20, 1),
+        inset -12px 0px 12px -6px rgba(3, 15, 20, 1),
+        -1px -1px 6px 0px rgb(0, 153, 255);
+    }
+    .text {
+      color: #d0a756;
+      font-weight: 700;
+      margin: auto;
+      transition: all 0.3s;
+      width: fit-content;
+    }
+    .button:hover .text { transform: scale(0.9); }
+    .button:active .text { transform: scale(0.8); }
+    .button.active {
+      box-shadow:
+        inset 0px -6px 18px -6px rgba(3, 15, 20, 1),
+        inset 0px 6px 18px -6px rgba(3, 15, 20, 1),
+        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
+        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
+        -1px -1px 6px 0px rgb(0, 153, 255);
+    }
+    .button.active .text { transform: scale(0.9); }
   </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-
-  <!-- Navbar (unchanged) -->
-  <nav class="bg-white border-gray-200 dark:bg-gray-900 border-b border-gray-800">
+<body class="bg-gray-900">
+  <!-- Navbar -->
+  <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <a href="index.html" class="flex items-center space-x-3">
-        <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Logo" />
-        <span class="text-2xl font-semibold dark:text-white">VideoHub</span>
+      <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 w-auto" alt="VideoHub Logo" />
+        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VideoHub</span>
       </a>
-      <div class="flex md:order-2 space-x-3">
+      <div class="flex md:order-2 space-x-3 rtl:space-x-reverse">
+        <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search"
+                class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-green-300 rounded-lg text-sm p-2.5 me-2">
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+          </svg>
+        </button>
         <div class="relative hidden md:block">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 20 20">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
           </div>
-          <input type="text" id="search-navbar" class="block w-full p-2 ps-10 text-sm rounded-lg bg-gray-800 border border-gray-700 focus:ring-green-500 focus:border-green-500" placeholder="Search videos, performers...">
+          <input type="text" id="search-navbar"
+                 class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                 placeholder="Search videos, performers, studios..." oninput="debouncedSearch()" onkeydown="handleEnter(event)">
+          <div id="search-suggestions" class="search-suggestions hidden z-50 bg-gray-800 border border-gray-700 rounded-lg mt-1 w-full shadow-lg"></div>
         </div>
+        <button data-collapse-toggle="navbar-search" type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+        </button>
+      </div>
+      <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
+        <div class="relative mt-3 md:hidden">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+          </div>
+          <input type="text" id="search-navbar-mobile"
+                 class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+                 placeholder="Search..." oninput="debouncedSearch()" onkeydown="handleEnter(event)">
+          <div id="search-suggestions-mobile" class="search-suggestions hidden z-50 bg-gray-800 border border-gray-700 rounded-lg mt-1 w-full shadow-lg"></div>
+        </div>
+        <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <li><a href="index.html" class="block py-2 px-3 text-white bg-green-700 rounded md:bg-transparent md:text-green-700 md:p-0">Home</a></li>
+          <li><a href="studio.html" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 dark:text-white dark:hover:bg-gray-700">Studio</a></li>
+          <li><a href="performer.html" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 dark:text-white dark:hover:bg-gray-700">Performers</a></li>
+        </ul>
       </div>
     </div>
   </nav>
-
-  <!-- Main Content -->
-  <div class="content-wrapper max-w-5xl mx-auto p-4 lg:p-8">
-    <div id="video-details" class="space-y-8"></div>
+  <!-- Video Content -->
+  <div class="content-wrapper max-w-4xl mx-auto p-4">
+    <div id="video-details"></div>
   </div>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
   <script>
     const CACHE_TTL = 24 * 60 * 60 * 1000;
     let db = null;
-
+    let searchTimeout;
+    const searchInput = document.getElementById('search-navbar');
+    const searchInputMobile = document.getElementById('search-navbar-mobile');
+    const searchSuggestions = document.getElementById('search-suggestions');
+    const searchSuggestionsMobile = document.getElementById('search-suggestions-mobile');
+    const videoDetails = document.getElementById('video-details');
+    // ---------- IndexedDB ----------
     async function initDB() {
-      return new Promise((res, rej) => {
-        const req = indexedDB.open('VideoHubCache', 1);
-        req.onerror = () => rej(req.error);
-        req.onsuccess = () => { db = req.result; res(db); };
-        req.onupgradeneeded = e => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('videos')) db.createObjectStore('videos', { keyPath: 'id' });
-        };
-      });
+      try {
+        return await new Promise((res, rej) => {
+          const req = indexedDB.open('VideoHubCache', 1);
+          req.onerror = () => rej(req.error);
+          req.onsuccess = () => { db = req.result; res(db); };
+          req.onupgradeneeded = e => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('videos'))
+              db.createObjectStore('videos', { keyPath: 'id' });
+          };
+        });
+      } catch (e) { console.warn('DB init failed', e); }
     }
-
     async function getCache(id) {
       if (!db || !id) return null;
       return new Promise(res => {
         const tx = db.transaction('videos', 'readonly');
-        const req = tx.objectStore('videos').get(id);
+        const store = tx.objectStore('videos');
+        const req = store.get(id);
         req.onsuccess = () => {
           const d = req.result;
           res(d && Date.now() - d.ts < CACHE_TTL ? d.payload : null);
         };
+        req.onerror = () => res(null);
       });
     }
-
     async function putCache(id, payload) {
       if (!db || !id) return;
       const tx = db.transaction('videos', 'readwrite');
       tx.objectStore('videos').put({ id, payload, ts: Date.now() });
     }
-
+    // ---------- Load All Data ----------
     async function loadAllData() {
       const [scenesRes, performersRes, sitesRes] = await Promise.all([
         fetch('scene_details.json').then(r => r.ok ? r.json() : []),
         fetch('performer.json').then(r => r.ok ? r.json() : []),
         fetch('site.json').then(r => r.ok ? r.json() : [])
       ]);
-      const performersById = Object.fromEntries(performersRes.filter(p => p._id).map(p => [p._id, p]));
-      const sitesById = Object.fromEntries(sitesRes.filter(s => s.id).map(s => [s.id, s]));
+      const performersById = {};
+      performersRes.forEach(p => { if (p._id != null) performersById[p._id] = p; });
+      const sitesById = {};
+      sitesRes.forEach(s => { if (s.id != null) sitesById[s.id] = s; });
       return { scenes: scenesRes, performersById, sitesById };
     }
-
+    // ---------- Load Video ----------
     async function loadVideo() {
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
-      if (!id) return document.getElementById('video-details').innerHTML = '<p class="text-red-400 text-center">No video ID specified</p>';
-
+      if (!id) { videoDetails.innerHTML = '<p class="text-red-400">No video ID</p>'; return; }
       const cached = await getCache(id);
       if (cached) { renderVideo(cached); return; }
-
       const { scenes, performersById, sitesById } = await loadAllData();
       const sceneItem = scenes.find(s => String(s.data?._id) === id);
-      if (!sceneItem || !sceneItem.data) return document.getElementById('video-details').innerHTML = '<p class="text-red-400 text-center">Video not found</p>';
-
+      if (!sceneItem) { videoDetails.innerHTML = '<p class="text-red-400">Video not found</p>'; return; }
       const d = sceneItem.data;
-
-      // Performers
-      const performers = (d.performers || []).map(p => {
-        const perf = performersById[p?.parent?._id || p?._id];
-        return perf ? { name: perf.name || 'Unknown', id: perf._id } : null;
-      }).filter(Boolean);
+      // === PERFORMERS ===
+      const perfRaw = d.performers || [];
+      const perfArray = Array.isArray(perfRaw) ? perfRaw : [perfRaw].filter(Boolean);
+      const performers = [];
+      perfArray.forEach(perf => {
+        const pid = perf?.parent?._id;
+        if (!pid) return;
+        const p = performersById[pid];
+        if (!p) return;
+        performers.push({ name: p.name || 'Unknown', id: pid });
+      });
       if (!performers.length) performers.push({ name: 'Unknown Performer', id: 0 });
-
-      // Studio chain
+      // === STUDIO CHAIN ===
+      const siteId = d.site?.id;
+      const site = siteId != null ? sitesById[siteId] : null;
       const studioChain = [];
-      const site = d.site?.id ? sitesById[d.site.id] : null;
       if (site?.name) studioChain.push({ name: site.name, id: site.id });
-      if (d.site?.parent_id) {
-        const parent = sitesById[d.site.parent_id];
-        if (parent?.name) studioChain.push({ name: parent.name, id: parent.id });
+      let parentName = null, parentId = null;
+      if (d.site?.parent_id != null) {
+        const p = sitesById[d.site.parent_id];
+        if (p?.name) { parentName = p.name; parentId = p.id; }
       }
-      if (d.site?.network_id) {
-        const network = sitesById[d.site.network_id];
-        if (network?.name && !studioChain.some(s => s.name === network.name)) studioChain.push({ name: network.name, id: network.id });
+      if (!parentName && site?.parent?.name) { parentName = site.parent.name; parentId = site.parent.id; }
+      if (parentName && parentName !== studioChain[0]?.name)
+        studioChain.push({ name: parentName, id: parentId || 0 });
+      let networkName = null, networkId = null;
+      if (d.site?.network_id != null) {
+        const n = sitesById[d.site.network_id];
+        if (n?.name) { networkName = n.name; networkId = n.id; }
       }
+      if (!networkName && site?.network?.name) { networkName = site.network.name; networkId = site.network.id; }
+      if (networkName && !studioChain.some(s => s.name === networkName))
+        studioChain.push({ name: networkName, id: networkId || 0 });
       if (!studioChain.length) studioChain.push({ name: 'Unknown Studio', id: 0 });
-
       const payload = {
         id: String(d._id),
         title: (d.title || 'Untitled').trim(),
-        description: d.description || 'No description available.',
-        thumbnail: d.background?.full || 'https://via.placeholder.com/1200x800?text=No+Image',
+        description: d.description || 'No description.',
+        thumbnail: d.background?.full || 'https://via.placeholder.com/300x200?text=No+Image',
         trailer: d.trailer || '',
         videoId: sceneItem.video_id?.trim() || '',
         slug: sceneItem.slug?.trim() || '',
         performers,
         studioChain
       };
-
       await putCache(id, payload);
       renderVideo(payload);
     }
-
-    function renderVideo(v) {
-      const hasUPN = !!v.videoId;
-      const hasAbyss = !!v.slug;
-      const defaultSrc = hasAbyss ? `https://short.icu/${v.slug}` : hasUPN ? `https://purn.upn.one/#${v.videoId}` : 'about:blank';
-
-      const performersHtml = v.performers.map(p => p.id
-        ? `<a href="performer.html?name=${encodeURIComponent(p.name)}" class="text-green-400 hover:underline">${escape(p.name)}</a>`
-        : `<span class="text-gray-500">${escape(p.name)}</span>`
-      ).join(' • ');
-
-      const studioHtml = v.studioChain.map((s, i) => i === 0 && s.id
-        ? `<a href="site.html?id=${s.id}" class="text-green-400 hover:underline">${escape(s.name)}</a>`
-        : escape(s.name)
-      ).join(' → ');
-
-      // TRAILER SECTION – FIXED & BEAUTIFUL
-      let trailerSection = '';
-      if (v.trailer) {
-        const gdMatch = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
-        if (gdMatch) {
-          const fileId = gdMatch[1];
-          trailerSection = `
-            <div class="mt-12">
-              <h2 class="text-2xl font-bold mb-4 text-white">Trailer</h2>
-              <div class="w-full aspect-video rounded-lg shadow-2xl overflow-hidden bg-black">
-                <iframe 
-                  src="https://drive.google.com/file/d/${fileId}/preview"
-                  class="w-full h-full border-0"
-                  allow="autoplay; encrypted-media; fullscreen"
-                  allowfullscreen>
-                </iframe>
-              </div>
-            </div>`;
-        } else {
-          trailerSection = `
-            <div class="mt-12">
-              <h2 class="text-2xl font-bold mb-4 text-white">Trailer</h2>
-              <div class="w-full aspect-video rounded-lg shadow-2xl overflow-hidden bg-black">
-                <video controls poster="${v.thumbnail}" class="w-full h-full object-cover">
-                  <source src="${v.trailer}" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>`;
-        }
-      }
-
-      document.getElementById('video-details').innerHTML = `
-        <!-- Main Player -->
-        <div class="w-full aspect-video rounded-lg shadow-2xl overflow-hidden bg-black">
-          <iframe id="video-iframe" src="${defaultSrc}" class="w-full h-full" 
-                  allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-        </div>
-
-        <!-- Source Switcher -->
-        ${hasUPN || hasAbyss ? `
-          <div class="flex justify-center gap-6 my-8">
-            ${hasUPN ? `<button id="btn-upnshare" class="button ${hasUPN && !hasAbyss ? 'active' : ''}"><div class="text">UPNShare</div></button>` : ''}
-            ${hasAbyss ? `<button id="btn-abyss" class="button ${!hasUPN && hasAbyss ? 'active' : ''}"><div class="text">Abyss</div></button>` : ''}
-          </div>` : ''}
-
-        <!-- Title & Info -->
-        <h1 class="text-3xl md:text-4xl font-bold mt-6">${escape(v.title)}</h1>
-        <p class="text-gray-300 text-lg leading-relaxed mt-4">${escape(v.description)}</p>
-        <div class="mt-6 space-y-2 text-lg">
-          <p><span class="text-gray-500">Studio:</span> ${studioHtml}</p>
-          <p><span class="text-gray-500">Performers:</span> ${performersHtml}</p>
-        </div>
-
-        <!-- Trailer (fixed!) -->
-        ${trailerSection}
+    // ---------- Render Video ----------
+    // ---------- Render Video ----------
+function renderVideo(v) {
+  const hasUPN = !!v.videoId;
+  const hasAbyss = !!v.slug;
+  const showSwitcher = hasUPN && hasAbyss;
+  // Priority: UPNShare > Abyss > (fallback)
+  const defaultSrc = hasAbyss
+    ? `https://short.icu/${v.slug}`
+    : hasUPN
+      ? `https://purn.upn.one/#${v.videoId}`  
+      : 'about:blank';
+  const performersHtml = v.performers
+    .map(p => p.id
+      ? `<a href="performer.html?name=${encodeURIComponent(p.name)}" class="text-green-400 hover:underline">${escapeHtml(p.name)}</a>`
+      : `<span class="text-gray-500">${escapeHtml(p.name)}</span>`
+    )
+    .join(' , ');
+  const studioHtml = v.studioChain
+    .map((s, i) => s.id && i === 0
+      ? `<a href="site.html?id=${s.id}" class="text-green-400 hover:underline">${escapeHtml(s.name)}</a>`
+      : `<span class="text-green-400">${escapeHtml(s.name)}</span>`
+    )
+    .join(' → ');
+  // Handle Google Drive trailer embed
+  let trailerEmbed = '';
+  if (v.trailer) {
+    const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
+    if (match) {
+      const fileId = match[1];
+      trailerEmbed = `
+        <iframe src="https://drive.google.com/file/d/${fileId}/preview" 
+                width="100%" height="400px" frameborder="0"
+                allow="autoplay" 
+                allowfullscreen 
+                class="w-full rounded-lg mb-4 shadow-md aspect-video">
+        </iframe>
       `;
-
-      // Button logic
-      const iframe = document.getElementById('video-iframe');
-      const btnUPN = document.getElementById('btn-upnshare');
-      const btnAbyss = document.getElementById('btn-abyss');
-
-      if (btnUPN) btnUPN.onclick = () => { iframe.src = `https://purn.upn.one/#${v.videoId}`; btnUPN.classList.add('active'); btnAbyss?.classList.remove('active'); };
-      if (btnAbyss) btnAbyss.onclick = () => { iframe.src = `https://short.icu/${v.slug}`; btnAbyss.classList.add('active'); btnUPN?.classList.remove('active'); };
-
-      // Start with UPNShare if both exist
-      if (hasUPN && hasAbyss) btnAbyss.classList.add('active');
-      btnUPN.classList.remove('active');
+    } else {
+      // Fallback for non-Google Drive trailers
+      trailerEmbed = `
+        <video controls poster="${v.thumbnail}" class="w-full rounded-lg mb-4 shadow-md aspect-video">
+          <source src="${v.trailer}" type="video/mp4">
+          Your browser does not support video.
+        </video>
+      `;
     }
-
-    function escape(str) {
+  }
+  videoDetails.innerHTML = `
+    <div class="video-embed mb-6 aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
+      <iframe id="video-iframe" src="${defaultSrc}" class="w-full h-full" frameborder="0"
+              allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    ${showSwitcher ? `
+      <div id="source-switcher" class="flex justify-center gap-4 my-4">
+        <button id="btn-upnshare" class="button"><div class="text">UPNShare</div></button>
+        <button id="btn-abyss" class="button"><div class="text">Abyss</div></button>
+      </div>
+    ` : hasUPN ? `
+      <div id="source-switcher" class="flex justify-center gap-4 my-4">
+        <button id="btn-upnshare" class="button active"><div class="text">UPNShare</div></button>
+      </div>
+    ` : hasAbyss ? `
+      <div id="source-switcher" class="flex justify-center gap-4 my-4">
+        <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
+      </div>
+    ` : ''}
+    <h1 class="text-2xl md:text-3xl font-bold text-white mb-3">${escapeHtml(v.title)}</h1>
+    <p class="text-gray-300 mb-4 leading-relaxed">${escapeHtml(v.description)}</p>
+    <p class="text-sm text-gray-400 mb-1">Studio: ${studioHtml}</p>
+    <p class="text-sm text-gray-400 mb-6">Performers: ${performersHtml}</p>
+    ${trailerEmbed}
+  `;
+  // ——— Button logic (runs after DOM is updated) ———
+  const iframe = document.getElementById('video-iframe');
+  const btnUPN = document.getElementById('btn-upnshare');
+  const btnAbyss = document.getElementById('btn-abyss');
+  const setSource = (src, type) => {
+    if (iframe.src !== src) iframe.src = src;
+    btnUPN?.classList.toggle('active', type === 'upnshare');
+    btnAbyss?.classList.toggle('active', type === 'abyss');
+  };
+  if (showSwitcher) {
+    btnUPN.addEventListener('click', () => setSource(`https://purn.upn.one/#${v.videoId}`, 'upnshare'));
+    btnAbyss.addEventListener('click', () => setSource(`https://short.icu/${v.slug}`, 'abyss'));
+    // Always start with UPNShare active when both exist
+    btnAbyss.classList.add('active');
+    btnUPN.classList.remove('active');
+  } else {
+    // Only one source → button is already marked active in the HTML (see template above)
+    // So we just make sure the iframe is correct (in case of refresh)
+    if (hasUPN) setSource(`https://purn.upn.one/#${v.videoId}`, 'upnshare');
+    else if (hasAbyss) setSource(`https://short.icu/${v.slug}`, 'abyss');
+  }
+} // ← renderVideo closed correctly
+    // ---------- Search ----------
+    async function ensureSearchIndex() {
+      if (localStorage.getItem('searchIndex')) return;
+      const { scenes, performersById } = await loadAllData();
+      const index = scenes.map(s => {
+        const d = s.data;
+        if (!d?._id) return null;
+        const names = (d.performers || [])
+          .map(perf => {
+            const p = performersById[perf?.parent?._id];
+            return p?.name || null;
+          })
+          .filter(Boolean);
+        return {
+          id: String(d._id),
+          title: (d.title || '').trim(),
+          thumbnail: d.background?.full || '',
+          actresses: names.length ? names.join(', ') : 'Unknown'
+        };
+      }).filter(Boolean);
+      localStorage.setItem('searchIndex', JSON.stringify(index));
+    }
+    function debouncedSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(handleSearch, 300);
+    }
+    async function handleSearch() {
+      const q = (searchInput?.value || searchInputMobile?.value || '').trim().toLowerCase();
+      if (!q) { hideSuggestions(); return; }
+      await ensureSearchIndex();
+      const index = JSON.parse(localStorage.getItem('searchIndex') || '[]');
+      const results = index
+        .filter(v => v.title.toLowerCase().includes(q) || v.actresses.toLowerCase().includes(q))
+        .slice(0, 5);
+      renderSuggestions(searchSuggestions, results);
+      renderSuggestions(searchSuggestionsMobile, results);
+    }
+    function renderSuggestions(container, list) {
+      container.innerHTML = list.length
+        ? list.map(v => `
+            <div class="flex items-center p-2 cursor-pointer hover:bg-gray-700 rounded" onclick="location.href='video.html?id=${v.id}'">
+              <img src="${v.thumbnail || 'https://via.placeholder.com/40x40'}" class="w-10 h-10 rounded object-cover mr-3"
+                   onerror="this.src='https://via.placeholder.com/40x40?text=No+Image'">
+              <div class="flex-1 min-w-0">
+                <div class="text-sm text-white truncate">${escapeHtml(v.title)}</div>
+                <div class="text-xs text-green-400 truncate">${escapeHtml(v.actresses)}</div>
+              </div>
+            </div>
+          `).join('')
+        : '<div class="p-2 text-sm text-gray-400">No results</div>';
+      container.classList.toggle('hidden', !list.length);
+    }
+    function hideSuggestions() {
+      searchSuggestions.classList.add('hidden');
+      searchSuggestionsMobile.classList.add('hidden');
+    }
+    function handleEnter(e) {
+      if (e.key === 'Enter') {
+        const q = (searchInput?.value || searchInputMobile?.value || '').trim();
+        if (q) location.href = `search.html?query=${encodeURIComponent(q)}`;
+      }
+    }
+    function escapeHtml(str) {
       const div = document.createElement('div');
       div.textContent = str;
       return div.innerHTML;
     }
-
-    // Init
-    initDB().finally(loadVideo);
+    // ---------- Init ----------
+    initDB().finally(() => {
+      loadVideo();
+      ensureSearchIndex();
+    });
+    searchInput?.addEventListener('input', debouncedSearch);
+    searchInputMobile?.addEventListener('input', debouncedSearch);
+    document.addEventListener('keydown', handleEnter);
   </script>
 </body>
 </html>
