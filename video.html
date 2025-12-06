@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Permissions-Policy" content="fullscreen=(self)">
   <title>Video Details</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
@@ -66,6 +67,48 @@
         -1px -1px 6px 0px rgb(0, 153, 255);
     }
     .button.active .text { transform: scale(0.9); }
+
+    /* Responsive container for video embeds */
+    .embed-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      background-color: #000;
+    }
+    .embed-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* Specific for Abyss embed */
+    .abyss-embed {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+      overflow: hidden;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      background-color: #000;
+    }
+    .abyss-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
   </style>
 </head>
 <body class="bg-gray-900">
@@ -131,47 +174,12 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
   <script>
-    const CACHE_TTL = 24 * 60 * 60 * 1000;
-    let db = null;
     let searchTimeout;
     const searchInput = document.getElementById('search-navbar');
     const searchInputMobile = document.getElementById('search-navbar-mobile');
     const searchSuggestions = document.getElementById('search-suggestions');
     const searchSuggestionsMobile = document.getElementById('search-suggestions-mobile');
     const videoDetails = document.getElementById('video-details');
-    // ---------- IndexedDB ----------
-    async function initDB() {
-      try {
-        return await new Promise((res, rej) => {
-          const req = indexedDB.open('VideoHubCache', 1);
-          req.onerror = () => rej(req.error);
-          req.onsuccess = () => { db = req.result; res(db); };
-          req.onupgradeneeded = e => {
-            const db = e.target.result;
-            if (!db.objectStoreNames.contains('videos'))
-              db.createObjectStore('videos', { keyPath: 'id' });
-          };
-        });
-      } catch (e) { console.warn('DB init failed', e); }
-    }
-    async function getCache(id) {
-      if (!db || !id) return null;
-      return new Promise(res => {
-        const tx = db.transaction('videos', 'readonly');
-        const store = tx.objectStore('videos');
-        const req = store.get(id);
-        req.onsuccess = () => {
-          const d = req.result;
-          res(d && Date.now() - d.ts < CACHE_TTL ? d.payload : null);
-        };
-        req.onerror = () => res(null);
-      });
-    }
-    async function putCache(id, payload) {
-      if (!db || !id) return;
-      const tx = db.transaction('videos', 'readwrite');
-      tx.objectStore('videos').put({ id, payload, ts: Date.now() });
-    }
     // ---------- Load All Data ----------
     async function loadAllData() {
       const [scenesRes, performersRes, sitesRes] = await Promise.all([
@@ -190,8 +198,6 @@
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
       if (!id) { videoDetails.innerHTML = '<p class="text-red-400">No video ID</p>'; return; }
-      const cached = await getCache(id);
-      if (cached) { renderVideo(cached); return; }
       const { scenes, performersById, sitesById } = await loadAllData();
       const sceneItem = scenes.find(s => String(s.data?._id) === id);
       if (!sceneItem) { videoDetails.innerHTML = '<p class="text-red-400">Video not found</p>'; return; }
@@ -241,7 +247,6 @@
         performers,
         studioChain
       };
-      await putCache(id, payload);
       renderVideo(payload);
     }
     // ---------- Render Video ----------
@@ -250,12 +255,9 @@ function renderVideo(v) {
   const hasUPN = !!v.videoId;
   const hasAbyss = !!v.slug;
   const showSwitcher = hasUPN && hasAbyss;
-  // Priority: UPNShare > Abyss > (fallback)
-  const defaultSrc = hasAbyss
-    ? `https://short.icu/${v.slug}`
-    : hasUPN
-      ? `https://purn.upn.one/#${v.videoId}`  
-      : 'about:blank';
+  const upnSrc = `https://purn.upn.one/#${v.videoId}`;
+  const abyssSrc = `https://short.icu/${v.slug}`;
+  const defaultSrc = hasAbyss ? abyssSrc : hasUPN ? upnSrc : 'about:blank';
   const performersHtml = v.performers
     .map(p => p.id
       ? `<a href="performer.html?name=${encodeURIComponent(p.name)}" class="text-green-400 hover:underline">${escapeHtml(p.name)}</a>`
@@ -275,12 +277,15 @@ function renderVideo(v) {
     if (match) {
       const fileId = match[1];
       trailerEmbed = `
-        <iframe src="https://drive.google.com/file/d/${fileId}/preview" 
-                width="100%" height="400px" frameborder="0"
-                allow="autoplay" 
-                allowfullscreen 
-                class="w-full rounded-lg mb-4 shadow-md aspect-video">
-        </iframe>
+        <div class="embed-container">
+          <iframe src="https://drive.google.com/file/d/${fileId}/preview" 
+                  class="embed-iframe"
+                  allow="fullscreen autoplay" 
+                  frameborder="0"
+                  scrolling="no"
+                  allowfullscreen>
+          </iframe>
+        </div>
       `;
     } else {
       // Fallback for non-Google Drive trailers
@@ -292,15 +297,31 @@ function renderVideo(v) {
       `;
     }
   }
+  // Conditional embed for default source
+  let videoEmbed = '';
+  if (defaultSrc.includes('short.icu')) {
+    // Separate Abyss embed
+    videoEmbed = `
+      <div class="abyss-embed">
+        <iframe id="video-iframe" src="${defaultSrc}" class="abyss-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
+        </iframe>
+      </div>
+    `;
+  } else {
+    // Standard embed for UPN or blank
+    videoEmbed = `
+      <div class="embed-container">
+        <iframe id="video-iframe" src="${defaultSrc}" class="embed-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
+        </iframe>
+      </div>
+    `;
+  }
   videoDetails.innerHTML = `
-    <div class="video-embed mb-6 aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
-      <iframe id="video-iframe" src="${defaultSrc}" class="w-full h-full" frameborder="0"
-              allow="fullscreen; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-    </div>
+    ${videoEmbed}
     ${showSwitcher ? `
       <div id="source-switcher" class="flex justify-center gap-4 my-4">
         <button id="btn-upnshare" class="button"><div class="text">UPNShare</div></button>
-        <button id="btn-abyss" class="button"><div class="text">Abyss</div></button>
+        <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
       </div>
     ` : hasUPN ? `
       <div id="source-switcher" class="flex justify-center gap-4 my-4">
@@ -318,25 +339,43 @@ function renderVideo(v) {
     ${trailerEmbed}
   `;
   // ——— Button logic (runs after DOM is updated) ———
-  const iframe = document.getElementById('video-iframe');
   const btnUPN = document.getElementById('btn-upnshare');
   const btnAbyss = document.getElementById('btn-abyss');
+  const embedDiv = videoDetails.querySelector('.embed-container, .abyss-embed');
+  if (!embedDiv) return;
   const setSource = (src, type) => {
-    if (iframe.src !== src) iframe.src = src;
+    // Clear current iframe
+    embedDiv.innerHTML = '';
+    // Create new iframe based on type
+    const isAbyss = type === 'abyss';
+    const iframeClass = isAbyss ? 'abyss-iframe' : 'embed-iframe';
+    const containerClass = isAbyss ? 'abyss-embed' : 'embed-container';
+    const newContainer = document.createElement('div');
+    newContainer.className = containerClass;
+    const iframe = document.createElement('iframe');
+    iframe.id = 'video-iframe';
+    iframe.src = src;
+    iframe.className = iframeClass;
+    iframe.frameBorder = '0';
+    iframe.scrolling = 'no';
+    iframe.allowFullscreen = true;
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+    newContainer.appendChild(iframe);
+    embedDiv.parentNode.replaceChild(newContainer, embedDiv);
+    // Update buttons
     btnUPN?.classList.toggle('active', type === 'upnshare');
     btnAbyss?.classList.toggle('active', type === 'abyss');
   };
   if (showSwitcher) {
-    btnUPN.addEventListener('click', () => setSource(`https://purn.upn.one/#${v.videoId}`, 'upnshare'));
-    btnAbyss.addEventListener('click', () => setSource(`https://short.icu/${v.slug}`, 'abyss'));
-    // Always start with UPNShare active when both exist
+    btnUPN.addEventListener('click', () => setSource(upnSrc, 'upnshare'));
+    btnAbyss.addEventListener('click', () => setSource(abyssSrc, 'abyss'));
+    // Start with Abyss active if both
     btnAbyss.classList.add('active');
     btnUPN.classList.remove('active');
-  } else {
-    // Only one source → button is already marked active in the HTML (see template above)
-    // So we just make sure the iframe is correct (in case of refresh)
-    if (hasUPN) setSource(`https://purn.upn.one/#${v.videoId}`, 'upnshare');
-    else if (hasAbyss) setSource(`https://short.icu/${v.slug}`, 'abyss');
+  } else if (hasUPN) {
+    btnUPN?.classList.add('active');
+  } else if (hasAbyss) {
+    btnAbyss?.classList.add('active');
   }
 } // ← renderVideo closed correctly
     // ---------- Search ----------
@@ -407,10 +446,8 @@ function renderVideo(v) {
       return div.innerHTML;
     }
     // ---------- Init ----------
-    initDB().finally(() => {
-      loadVideo();
-      ensureSearchIndex();
-    });
+    loadVideo();
+    ensureSearchIndex();
     searchInput?.addEventListener('input', debouncedSearch);
     searchInputMobile?.addEventListener('input', debouncedSearch);
     document.addEventListener('keydown', handleEnter);
