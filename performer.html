@@ -14,7 +14,7 @@
   ">
   <title>Female Performers - VideoHub</title>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet">
 
@@ -74,9 +74,9 @@
     right: 0;
     background: rgba(0, 0, 0, 0.363);
     padding: 0.5rem 1rem;
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 700;
+    color: rgb(255, 255, 255);
+    font-size: 0.8rem;
+    font-weight: 500;
     text-align: center;
     text-shadow: 0 2px 8px rgba(0,0,0,0.9);
     line-clamp: 2;
@@ -90,7 +90,7 @@
   /* TOP INFO OVERLAY (used on performer cards) */
   .top-info {
     position: absolute;
-    top: 12px;
+    top: 3px;
     left: 12px;
     right: 12px;
     display: flex;
@@ -99,7 +99,7 @@
     background: rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 4px 8px;
+    padding: 3px 5px;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
@@ -108,24 +108,24 @@
 
   .performer-name {
     color: white;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 700;
     text-shadow: 0 2px 6px rgba(0,0,0,0.8);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 70%;
+    max-width: 65%;
   }
 
   .performer-count-box {
     background: linear-gradient(135deg, #1045b9, #34d399);
     color: white;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     font-weight: 800;
-    padding: 4px 2px;
+    padding: 3px 2px;
     border-radius: 9999px;
     box-shadow: 0 4px 12px rgba(4, 117, 223, 0.5);
-    min-width: 90px;
+    min-width: 80px;
     text-align: center;
     letter-spacing: 0.5px;
   }
@@ -136,35 +136,15 @@
       top: 10px;
       left: 10px;
       right: 10px;
-      padding: 7px 12px;
+      padding: 2px 6px;
     }
     .performer-name {
-      font-size: 0.95rem;
+      font-size: 0.6rem;
     }
     .performer-count-box {
-      font-size: 0.8rem;
-      padding: 5px 12px;
-      min-width: 80px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .top-info {
-      top: 8px;
-      left: 8px;
-      right: 8px;
-      padding: 6px 10px;
-      flex-direction: row;
-      gap: 8px;
-    }
-    .performer-name {
-      font-size: 0.9rem;
-      max-width: 65%;
-    }
-    .performer-count-box {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      min-width: 70px;
+      font-size: 0.6rem;
+      padding: 2px 2px;
+      min-width: 65px;
     }
   }
 
@@ -197,25 +177,25 @@
     display: flex; 
     flex-wrap: wrap; 
     justify-content: center; 
-    margin: 30px 0; 
+    margin: 8px 0; 
     gap: 10px;
   }
   .pagination a, .pagination span { 
-    padding: 12px 18px; 
-    background-color: #71aaf5; 
+    padding: 6px 8px; 
+    background-color: #0972fa; 
     color: white;
-    border-radius: 10px; 
+    border-radius: 15px; 
     font-weight: 600;
     min-width: 48px;
     text-align: center;
     transition: all 0.3s ease;
   }
   .pagination a:hover { 
-    background-color: #006dfc; 
+    background-color: #65a8ff; 
     transform: translateY(-2px);
   }
   .pagination .active { 
-    background-color: #006dfc; 
+    background-color: #65a8ff; 
     box-shadow: inset 0 0 12px rgba(0,0,0,0.6);
   }
 
@@ -234,20 +214,31 @@
     box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4); 
   }
 
-  /* SINGLE PERFORMER HEADER - NAME AND COUNT ON SAME LINE */
+  /* === HEADER LAYOUT WITH BACK BUTTON ON LEFT & CENTERED NAME/COUNT === */
+  .performer-header-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr auto;  /* Left: back button | Center: name+count | Right: invisible spacer */
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 1rem;
+}
+.performer-header-wrapper::after {
+  content: '';
+  visibility: hidden;
+  pointer-events: none;
+}
   .performer-header-line {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: 1rem;
-    margin: 0.5rem 0 1.5rem 0;
-    flex-wrap: wrap;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 1rem;
+  grid-column: 2;   /* Places it exactly in the center column */
+}
 
   .performer-header-name {
     font-size: 2rem;
-    font-weight: 900;
-    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #6b98cc, #1aeea0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -257,40 +248,55 @@
   }
 
   .performer-header-count {
-  font-size: 1.6rem;
-  font-weight: 800;
-  font-family: 'Oswald', sans-serif;
-  background: linear-gradient(90deg, #ffffff, #ff7b00, #ffffff);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shine 4s linear infinite;
-}
-
-@keyframes shine {
-  to {
-    background-position: 200% center;
+    position: relative;
+    display: inline-block;
+    padding: 0.2em 0.8em;
+    font-size: 1.2rem;
+    font-weight: 800;
+    font-family: 'Oswald', sans-serif;
+    background: #001d47;
+    border-radius: 50px;
+    box-shadow: 
+      inset 0 0 10px rgba(255, 255, 255, 0.404),
+      0 2px 8px rgba(0, 84, 211, 0.4),
+      0 0 12px rgba(0, 84, 211, 0.2);
+    border: 1px solid rgba(0, 255, 200, 0.5);
   }
-}
 
+  .performer-header-count span {
+    display: inline-block;
+    background: linear-gradient(120deg, #00ffc8, #ffee01, #00ffc8);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-fill-color: transparent;
+    animation: shine 4s linear infinite;
+  }
 
-  /* RETURN BUTTON - ZERO SPACE ABOVE */
+  @keyframes shine {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  /* RETURN BUTTON */
   .performer-back-link { 
     display: block;
     width: fit-content;
-    margin: 0 auto 1rem auto !important;  /* Top margin = 0 */
-    padding: 14px 40px;
-    font-size: 1.15rem;
+    padding: 8px 10px;
+    font-size: 0.8rem;
     font-weight: 700;
     color: white;
     background: linear-gradient(135deg, #111827, #1f2937);
-    border: 2px solid #10b981;
+    border: 1px solid #10b981;
     border-radius: 9999px;
     text-decoration: none;
     box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 20px rgba(16,185,129,0.15);
     transition: all 0.4s ease;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    flex-shrink: 0;
+    justify-self: start;
   }
 
   .performer-back-link:hover { 
@@ -304,15 +310,49 @@
     transform: translateY(-2px) scale(1.03);
   }
 
-  /* SINGLE PERFORMER CONTAINER - NO TOP SPACE AT ALL */
+  /* SINGLE PERFORMER CONTAINER */
   .single-performer-container {
     padding-top: 0 !important;
-    margin-top: -1rem;  /* Pulls content up to eliminate any possible gap */
+    margin-top: -1rem;
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  /* Responsive: stack on small screens */
+  @media (max-width: 640px) {
+    .pagination a, .pagination span {   
+      padding: 4px 6px; 
+      min-width: 20px;
+      font-weight: 400;
+      border-radius: 15px;
+    }
+    .performer-header-wrapper {
+      flex-direction: column;
+      text-align: center;
+    }
+    .performer-header-line {
+      justify-content: center;
+    }
+    .performer-header-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .performer-header-count {
+      font-size: 0.95rem;
+      padding: 2px 8px;
+    }
+    .performer-back-link {
+      order: -1;
+      justify-self: center;
+      font-size: 0.8rem;
+      padding: 4px 6px;
+    }
+    .performer-header-wrapper::after {
+    display: none;  /* No need for spacer on mobile */
+    }
   }
 
   @media (hover: none) {
@@ -454,41 +494,39 @@
     }
 
     function renderSinglePerformer(p) {
-    // Set the page title to the performer's name
-    document.title = `${escapeHtml(p.name)} - VideoHub`;
+      document.title = `${escapeHtml(p.name)} - VideoHub`;
 
-    performerList.innerHTML = `
-      <div class="single-performer-container">
-        <a href="performer.html" class="performer-back-link">← All Female Performers</a>
-
-        <div class="performer-info">
-          <div class="performer-header-line">
-            <h1 class="performer-header-name">${escapeHtml(p.name)}</h1>
-            ${p.scenes.length ? `<span class="performer-header-count">Videos (${p.scenes.length})</span>` : ''}
+      performerList.innerHTML = `
+        <div class="single-performer-container">
+          <div class="performer-header-wrapper">
+            <a href="performer.html" class="performer-back-link">← All Female Performers</a>
+            
+            <div class="performer-header-line">
+              <h1 class="performer-header-name">${escapeHtml(p.name)}</h1>
+              ${p.scenes.length ? `<span class="performer-header-count"><span>Videos -${p.scenes.length}</span></span>` : ''}
+            </div>
           </div>
 
-          ${p.scenes.length ? `
-            <div class="single-video-grid">
-              ${p.scenes.map(s => `
-                <div class="video-item">
-                  <a href="video.html?id=${s.id}">
-                    <img src="${s.thumb}" alt="${escapeHtml(s.title)}"
-                         loading="lazy"
-                         onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                    <div class="title-overlay">${escapeHtml(s.title)}</div>
-                  </a>
-                </div>`).join('')}
-            </div>`
-          : `<p style="margin-top:2rem; color:#9ca3af; text-align:center;">No videos yet.</p>`}
-        </div>
-      </div>`;
+          <div class="performer-info">
+            ${p.scenes.length ? `
+              <div class="single-video-grid">
+                ${p.scenes.map(s => `
+                  <div class="video-item">
+                    <a href="video.html?id=${s.id}">
+                      <img src="${s.thumb}" alt="${escapeHtml(s.title)}"
+                           loading="lazy"
+                           onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                      <div class="title-overlay">${escapeHtml(s.title)}</div>
+                    </a>
+                  </div>`).join('')}
+              </div>`
+            : `<p style="margin-top:2rem; color:#9ca3af; text-align:center;">No videos yet.</p>`}
+          </div>
+        </div>`;
 
-    paginationTop.classList.add('hidden');
-    paginationBottom.classList.add('hidden');
-  }
-
-    // ... rest of the script remains exactly the same as before ...
-    // (renderCurrentPage, renderPagination, debouncedSearch, etc. - unchanged)
+      paginationTop.classList.add('hidden');
+      paginationBottom.classList.add('hidden');
+    }
 
     function updatePageFromURL() {
       const page = parseInt(getParams().get('page')) || 1;
