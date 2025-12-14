@@ -72,13 +72,12 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.363);
-    padding: 0.5rem 1rem;
+    background: linear-gradient(0deg, #000000, #00000000);
+    padding: 0.1rem 0.1rem;
     color: rgb(255, 255, 255);
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: clamp(0.4em, 2.5vw, 1em) !important;
+    font-weight: 300;
     text-align: center;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
     line-clamp: 2;
     -webkit-line-clamp: 2;
     display: -webkit-box;
@@ -217,10 +216,10 @@
   /* === HEADER LAYOUT WITH BACK BUTTON ON LEFT & CENTERED NAME/COUNT === */
   .performer-header-wrapper {
   display: grid;
-  grid-template-columns: auto 1fr auto;  /* Left: back button | Center: name+count | Right: invisible spacer */
+  grid-template-columns: auto 1fr 0.1fr;  /* Left: back button | Center: name+count | Right: invisible spacer */
   align-items: center;
   margin-bottom: 0.5rem;
-  gap: 1rem;
+  gap: 0.1rem;
 }
 .performer-header-wrapper::after {
   content: '';
@@ -244,7 +243,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin: 0;
-    line-height: 1.2;
+    line-height: 1;
   }
 
   .performer-header-count {
@@ -300,7 +299,7 @@
   }
 
   .performer-back-link:hover { 
-    background: linear-gradient(135deg, #10b981, #34d399);
+    background: linear-gradient(135deg, #c0fde9, #34d399);
     color: #000;
     transform: translateY(-6px) scale(1.06);
     box-shadow: 0 15px 35px rgba(16,185,129,0.4);
@@ -335,20 +334,24 @@
     }
     .performer-header-line {
       justify-content: center;
+      margin-left: 1rem;
+      grid-column: -4;
     }
     .performer-header-name {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 700;
+        
     }
     .performer-header-count {
-      font-size: 0.95rem;
-      padding: 2px 8px;
+      font-size: 1.1rem;
+      padding: 0.1px 15px;
     }
     .performer-back-link {
-      order: -1;
+      order: 0;
       justify-self: center;
-      font-size: 0.8rem;
-      padding: 4px 6px;
+      font-size: 0.9rem;
+      padding: 4px 5px;
+      margin-bottom: 0.9rem;
     }
     .performer-header-wrapper::after {
     display: none;  /* No need for spacer on mobile */
