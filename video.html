@@ -3,25 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Permissions-Policy" content="fullscreen=(self)">
   <title>Video Details</title>
+
+  <!-- Flowbite from CDN (your original) -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
-  <!-- CUSTOM BUTTON STYLE -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
+
+  <!-- Your original button + embed styles -->
   <style>
-    :root {
-      --color-back: #1a1a1a;
-    }
-  
+    :root { --color-back: #1a1a1a; }
     .button {
       background: var(--color-back);
       border-radius: 0.5em;
-      box-shadow:
-        inset 0px -6px 18px -6px rgba(3, 15, 20, 0),
-        inset rgba(54, 69, 75, 1) -1px -1px 6px 0px,
-        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
-        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
-        rgb(55, 72, 78) -1px -1px 6px 0px;
+      box-shadow: inset 0px -6px 18px -6px rgba(3,15,20,0), inset rgba(54,69,75,1) -1px -1px 6px 0px, inset 12px 0px 12px -6px rgba(3,15,20,0), inset -12px 0px 12px -6px rgba(3,15,20,0), rgb(55,72,78) -1px -1px 6px 0px;
       border: solid 2px #030f14;
       cursor: pointer;
       font-size: 16px;
@@ -33,209 +28,259 @@
       min-width: 100px;
       margin: 0 12px;
     }
-    .button:hover {
-      box-shadow:
-        inset 0px -6px 18px -6px rgba(3, 15, 20, 1),
-        inset 0px 6px 18px -6px rgba(3, 15, 20, 1),
-        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
-        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
-        -1px -1px 6px 0px rgb(0, 153, 255);
-    }
-    .button:active {
-      box-shadow:
-        inset 0px -12px 12px -6px rgba(3, 15, 20, 1),
-        inset 0px 12px 12px -6px rgba(3, 15, 20, 1),
-        inset 12px 0px 12px -6px rgba(3, 15, 20, 1),
-        inset -12px 0px 12px -6px rgba(3, 15, 20, 1),
-        -1px -1px 6px 0px rgb(0, 153, 255);
-    }
-    .text {
-      color: #d0a756;
-      font-weight: 700;
-      margin: auto;
-      transition: all 0.3s;
-      width: fit-content;
-    }
+    .button:hover { box-shadow: inset 0px -6px 18px -6px rgba(3,15,20,1), inset 0px 6px 18px -6px rgba(3,15,20,1), inset 12px 0px 12px -6px rgba(3,15,20,0), inset -12px 0px 12px -6px rgba(3,15,20,0), -1px -1px 6px 0px rgb(0,153,255); }
+    .button:active { box-shadow: inset 0px -12px 12px -6px rgba(3,15,20,1), inset 0px 12px 12px -6px rgba(3,15,20,1), inset 12px 0px 12px -6px rgba(3,15,20,1), inset -12px 0px 12px -6px rgba(3,15,20,1), -1px -1px 6px 0px rgb(0,153,255); }
+    .text { color: #d0a756; font-weight: 700; margin: auto; transition: all 0.3s; width: fit-content; }
     .button:hover .text { transform: scale(0.9); }
     .button:active .text { transform: scale(0.8); }
-    .button.active {
-      box-shadow:
-        inset 0px -6px 18px -6px rgba(3, 15, 20, 1),
-        inset 0px 6px 18px -6px rgba(3, 15, 20, 1),
-        inset 12px 0px 12px -6px rgba(3, 15, 20, 0),
-        inset -12px 0px 12px -6px rgba(3, 15, 20, 0),
-        -1px -1px 6px 0px rgb(0, 153, 255);
-    }
+    .button.active { box-shadow: inset 0px -6px 18px -6px rgba(3,15,20,1), inset 0px 6px 18px -6px rgba(3,15,20,1), inset 12px 0px 12px -6px rgba(3,15,20,0), inset -12px 0px 12px -6px rgba(3,15,20,0), -1px -1px 6px 0px rgb(0,153,255); }
     .button.active .text { transform: scale(0.9); }
 
-    /* Responsive container for video embeds */
-    .embed-container {
+    .embed-container, .abyss-embed {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+      padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
       border-radius: 0.5rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
       background-color: #000;
     }
-    .embed-iframe {
+    .embed-iframe, .abyss-iframe {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       border: 0;
+    }
+  </style>
+  <style>
+    nav {
+  background-color: #1f2937;
+  border-bottom: 1px solid #374151;
+}
+.max-w-screen-xl {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 8px;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #111827;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+    /* Mobile menu links */
+    #nav-menu ul {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin: 0;
+      padding: 0.5rem 0 0 0;
+      list-style: none;
+      font-weight: 500;
     }
 
-    /* Specific for Abyss embed */
-    .abyss-embed {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-bottom: 56.25%;
-      overflow: hidden;
-      border-radius: 0.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      background-color: #000;
+    #nav-menu a {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: #e5e7eb;
+      transition: background-color 0.2s, color 0.2s;
     }
-    .abyss-iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
+
+    #nav-menu a:hover {
+      background-color: #374151;
+      color: #86efac;
+    }
+
+    /* Desktop: tight centered group */
+    @media (min-width: 768px) {
+      #middle-group {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem; /* Adjust this to make toggle closer/farther from Sites */
+      }
+
+      #nav-menu ul {
+        flex-direction: row;
+        gap: 1.5rem; /* Space between Sites and Performers */
+        padding: 0;
+      }
+
+      #nav-menu a {
+        padding: 0;
+        color: #d1d5db;
+        background-color: transparent;
+      }
+
+      #nav-menu a:hover {
+        background-color: transparent;
+        color: #86efac;
+      }
+    }
+
+    #nav-menu a.active {
+      color: #86efac;
+      font-weight: 600;
     }
   </style>
 </head>
 <body class="bg-gray-900">
-  <!-- Navbar -->
+
+  <!-- NAVBAR -->
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <!-- Logo -->
       <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 w-auto" alt="VideoHub Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VideoHub</span>
       </a>
-      <div class="flex md:order-2 space-x-3 rtl:space-x-reverse">
-        <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search"
-                class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-green-300 rounded-lg text-sm p-2.5 me-2">
-          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-          </svg>
-        </button>
+
+      <!-- Middle group: Toggle + Desktop Menu -->
+      <div id="middle-group" class="hidden md:flex items-center order-2 md:order-1">
+    
+
+        <!-- Desktop menu links -->
+        <div id="nav-menu">
+          <ul>
+            <li><a href="site.html">Sites</a></li>
+            <li><a href="performer.html">Performers</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right side: Search + Hamburger -->
+      <div class="flex md:order-2 space-x-3 rtl:space-x-reverse items-center">
         <div class="relative hidden md:block">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
           </div>
           <input type="text" id="search-navbar"
                  class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                 placeholder="Search videos, performers, studios..." oninput="debouncedSearch()" onkeydown="handleEnter(event)">
-          <div id="search-suggestions" class="search-suggestions hidden z-50 bg-gray-800 border border-gray-700 rounded-lg mt-1 w-full shadow-lg"></div>
+                 placeholder="Search videos, performers, studios..." oninput="debouncedSearch()">
+          <div id="search-suggestions" class="search-suggestions hidden"></div>
         </div>
+
         <button data-collapse-toggle="navbar-search" type="button"
                 class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M1 1h15M1 7h15M1 13h15"/>
+          <span class="sr-only">Open main menu</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
           </svg>
         </button>
       </div>
-      <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
-        <div class="relative mt-3 md:hidden">
+
+      <!-- Mobile Menu (hamburger dropdown) -->
+      <div class="hidden w-full" id="navbar-search">
+        <!-- Mobile Search -->
+        <div class="relative mt-3">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
           </div>
           <input type="text" id="search-navbar-mobile"
                  class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                 placeholder="Search..." oninput="debouncedSearch()" onkeydown="handleEnter(event)">
-          <div id="search-suggestions-mobile" class="search-suggestions hidden z-50 bg-gray-800 border border-gray-700 rounded-lg mt-1 w-full shadow-lg"></div>
+                 placeholder="Search..." oninput="debouncedSearch()">
+          <div id="search-suggestions-mobile" class="search-suggestions hidden"></div>
         </div>
-        <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <li><a href="index.html" class="block py-2 px-3 text-white bg-green-700 rounded md:bg-transparent md:text-green-700 md:p-0">Home</a></li>
-          <li><a href="studio.html" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 dark:text-white dark:hover:bg-gray-700">Studio</a></li>
-          <li><a href="performer.html" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-green-700 md:p-0 dark:text-white dark:hover:bg-gray-700">Performers</a></li>
-        </ul>
+
+        <!-- Mobile Toggle + Links -->
+        <div class="flex flex-col items-start mt-4">
+          <div class="mb-4">
+            <div class="checkbox-wrapper-8">
+              <input type="checkbox" id="data-toggle-mobile" class="tgl tgl-skewed">
+              <label for="data-toggle-mobile" data-tg-off="IRL" data-tg-on="JAV" class="tgl-btn"></label>
+            </div>
+          </div>
+          <div id="nav-menu">
+            <ul>
+              <li><a href="site.html">Sites</a></li>
+              <li><a href="performer.html">Performers</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
-  <!-- Video Content -->
+
+
   <div class="content-wrapper max-w-4xl mx-auto p-4">
-    <div id="video-details"></div>
+    <div id="video-details">Loading...</div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
+
   <script>
-    let searchTimeout;
-    const searchInput = document.getElementById('search-navbar');
-    const searchInputMobile = document.getElementById('search-navbar-mobile');
-    const searchSuggestions = document.getElementById('search-suggestions');
-    const searchSuggestionsMobile = document.getElementById('search-suggestions-mobile');
-    const videoDetails = document.getElementById('video-details');
-    // ---------- Load All Data ----------
-    async function loadAllData() {
-      const [scenesRes, performersRes, sitesRes] = await Promise.all([
-        fetch('scene_details.json').then(r => r.ok ? r.json() : []),
-        fetch('performer.json').then(r => r.ok ? r.json() : []),
-        fetch('site.json').then(r => r.ok ? r.json() : [])
-      ]);
-      const performersById = {};
-      performersRes.forEach(p => { if (p._id != null) performersById[p._id] = p; });
-      const sitesById = {};
-      sitesRes.forEach(s => { if (s.id != null) sitesById[s.id] = s; });
-      return { scenes: scenesRes, performersById, sitesById };
+    const datasets = {
+      irl: { scenes: 'scene_details.json', performers: 'performer.json', sites: 'site.json' },
+      jav: { scenes: 'scene_details_jav.json', performers: 'performer_jav.json', sites: 'site_jav.json' }
+    };
+
+    let currentDataset = localStorage.getItem('selectedDataset') || 'irl';
+    let allScenes = [], performersById = {}, sitesById = {};
+
+    async function loadSites() {
+      const res = await fetch(datasets[currentDataset].sites);
+      if (!res.ok) return;
+      const data = await res.json();
+      sitesById = {};
+      data.forEach(s => { if (s.id != null) sitesById[s.id] = s; });
     }
-    // ---------- Load Video ----------
+
+    async function loadCurrentDataset() {
+      const ds = datasets[currentDataset];
+      const [sceneRes, perfRes] = await Promise.all([
+        fetch(ds.scenes).then(r => r.ok ? r.json() : []),
+        fetch(ds.performers).then(r => r.ok ? r.json() : [])
+      ]);
+      performersById = {};
+      perfRes.forEach(p => { if (p._id) performersById[p._id] = p; });
+      allScenes = sceneRes;
+    }
+
+    async function init() {
+      await Promise.all([loadSites(), loadCurrentDataset()]);
+      loadVideo();
+    }
+
+    const videoDetails = document.getElementById('video-details');
+
     async function loadVideo() {
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
       if (!id) { videoDetails.innerHTML = '<p class="text-red-400">No video ID</p>'; return; }
-      const { scenes, performersById, sitesById } = await loadAllData();
-      const sceneItem = scenes.find(s => String(s.data?._id) === id);
+
+      const sceneItem = allScenes.find(s => String(s.data?._id) === id);
       if (!sceneItem) { videoDetails.innerHTML = '<p class="text-red-400">Video not found</p>'; return; }
-      const d = sceneItem.data;
-      // === PERFORMERS ===
+
+      const d = sceneItem.data || {};
       const perfRaw = d.performers || [];
       const perfArray = Array.isArray(perfRaw) ? perfRaw : [perfRaw].filter(Boolean);
-      const performers = [];
-      perfArray.forEach(perf => {
+      const performers = perfArray.map(perf => {
         const pid = perf?.parent?._id;
-        if (!pid) return;
-        const p = performersById[pid];
-        if (!p) return;
-        performers.push({ name: p.name || 'Unknown', id: pid });
-      });
+        const p = pid ? performersById[pid] : null;
+        return { name: p?.name || 'Unknown', id: pid };
+      }).filter(p => p.name);
       if (!performers.length) performers.push({ name: 'Unknown Performer', id: 0 });
-      // === STUDIO CHAIN ===
+
       const siteId = d.site?.id;
       const site = siteId != null ? sitesById[siteId] : null;
       const studioChain = [];
       if (site?.name) studioChain.push({ name: site.name, id: site.id });
       let parentName = null, parentId = null;
-      if (d.site?.parent_id != null) {
-        const p = sitesById[d.site.parent_id];
-        if (p?.name) { parentName = p.name; parentId = p.id; }
-      }
+      if (d.site?.parent_id != null) { const p = sitesById[d.site.parent_id]; if (p?.name) { parentName = p.name; parentId = p.id; } }
       if (!parentName && site?.parent?.name) { parentName = site.parent.name; parentId = site.parent.id; }
-      if (parentName && parentName !== studioChain[0]?.name)
-        studioChain.push({ name: parentName, id: parentId || 0 });
+      if (parentName && parentName !== studioChain[0]?.name) studioChain.push({ name: parentName, id: parentId || 0 });
+
       let networkName = null, networkId = null;
-      if (d.site?.network_id != null) {
-        const n = sitesById[d.site.network_id];
-        if (n?.name) { networkName = n.name; networkId = n.id; }
-      }
+      if (d.site?.network_id != null) { const n = sitesById[d.site.network_id]; if (n?.name) { networkName = n.name; networkId = n.id; } }
       if (!networkName && site?.network?.name) { networkName = site.network.name; networkId = site.network.id; }
-      if (networkName && !studioChain.some(s => s.name === networkName))
-        studioChain.push({ name: networkName, id: networkId || 0 });
+      if (networkName && !studioChain.some(s => s.name === networkName)) studioChain.push({ name: networkName, id: networkId || 0 });
       if (!studioChain.length) studioChain.push({ name: 'Unknown Studio', id: 0 });
+
       const payload = {
         id: String(d._id),
         title: (d.title || 'Untitled').trim(),
@@ -247,233 +292,118 @@
         performers,
         studioChain
       };
+
       renderVideo(payload);
     }
-    // ---------- Render Video ----------
-    // ---------- Render Video ----------
-function renderVideo(v) {
-  const hasUPN = !!v.videoId;
-  const hasAbyss = !!v.slug;
-  const showSwitcher = hasUPN && hasAbyss;
-  const upnSrc = `https://purn.upn.one/#${v.videoId}`;
-  const abyssSrc = `https://short.icu/${v.slug}`;
-  const defaultSrc = hasAbyss ? abyssSrc : hasUPN ? upnSrc : 'about:blank';
-  const performersHtml = v.performers
-    .map(p => p.id
-      ? `<a href="performer.html?name=${encodeURIComponent(p.name)}" class="text-green-400 hover:underline">${escapeHtml(p.name)}</a>`
-      : `<span class="text-gray-500">${escapeHtml(p.name)}</span>`
-    )
-    .join(' , ');
-  const studioHtml = v.studioChain
-    .map((s, i) => s.id && i === 0
-      ? `<a href="site.html?id=${s.id}" class="text-green-400 hover:underline">${escapeHtml(s.name)}</a>`
-      : `<span class="text-green-400">${escapeHtml(s.name)}</span>`
-    )
-    .join(' → ');
-  // Handle Google Drive trailer embed
- let trailerEmbed = '';
 
-if (v.trailer) {
+    // YOUR ORIGINAL renderVideo FUNCTION — UNCHANGED
+    function renderVideo(v) {
+      const hasUPN = !!v.videoId;
+      const hasAbyss = !!v.slug;
+      const showSwitcher = hasUPN && hasAbyss;
+      const upnSrc = `https://purn.upn.one/#${v.videoId}`;
+      const abyssSrc = `https://short.icu/${v.slug}`;
+      const defaultSrc = hasAbyss ? abyssSrc : hasUPN ? upnSrc : 'about:blank';
 
-  // 1️⃣ Google Drive link
-  const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
-  if (match) {
-    const fileId = match[1];
-    trailerEmbed = `
-      <div class="embed-container">
-        <iframe
-          src="https://drive.google.com/file/d/${fileId}/preview"
-          class="embed-iframe"
-          allow="autoplay; fullscreen"
-          frameborder="0"
-          allowfullscreen>
-        </iframe>
-      </div>
-    `;
-  }
+      const performersHtml = v.performers
+        .map(p => p.id
+          ? `<a href="performer.html?name=${encodeURIComponent(p.name)}" class="text-green-400 hover:underline">${escapeHtml(p.name)}</a>`
+          : `<span class="text-gray-500">${escapeHtml(p.name)}</span>`
+        ).join(' , ');
 
-  // 2️⃣ Any URL → iframe embed (robust)
-  else if (/^https?:\/\//i.test(v.trailer)) {
-    trailerEmbed = `
-      <div class="embed-container">
-        <iframe
-          src="${v.trailer}"
-          class="embed-iframe"
-          allow="autoplay; fullscreen"
-          frameborder="0"
-          loading="lazy"
-          allowfullscreen>
-        </iframe>
-      </div>
-    `;
-  }
+      const studioHtml = v.studioChain
+        .map((s, i) => s.id && i === 0
+          ? `<a href="site.html?id=${s.id}" class="text-green-400 hover:underline">${escapeHtml(s.name)}</a>`
+          : `<span class="text-green-400">${escapeHtml(s.name)}</span>`
+        ).join(' → ');
 
-  // 3️⃣ Fallback → direct video file
-  else {
-    trailerEmbed = `
-      <video controls poster="${v.thumbnail}"
-             class="w-full rounded-lg mb-4 shadow-md aspect-video">
-        <source src="${v.trailer}" type="video/mp4">
-        Your browser does not support video.
-      </video>
-    `;
-  }
-}
+      let trailerEmbed = '';
+      if (v.trailer) {
+        const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (match) {
+          const fileId = match[1];
+          trailerEmbed = `<div class="embed-container"><iframe src="https://drive.google.com/file/d/${fileId}/preview" class="embed-iframe" allow="fullscreen; autoplay" frameborder="0" scrolling="no" allowfullscreen></iframe></div>`;
+        } else {
+          trailerEmbed = `<video controls poster="${v.thumbnail}" class="w-full rounded-lg mb-4 shadow-md aspect-video"><source src="${v.trailer}" type="video/mp4">Your browser does not support video.</video>`;
+        }
+      }
 
-  // Conditional embed for default source
-  let videoEmbed = '';
-  if (defaultSrc.includes('short.icu')) {
-    // Separate Abyss embed
-    videoEmbed = `
-      <div class="abyss-embed">
-        <iframe id="video-iframe" src="${defaultSrc}" class="abyss-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
-        </iframe>
-      </div>
-    `;
-  } else {
-    // Standard embed for UPN or blank
-    videoEmbed = `
-      <div class="embed-container">
-        <iframe id="video-iframe" src="${defaultSrc}" class="embed-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
-        </iframe>
-      </div>
-    `;
-  }
-  videoDetails.innerHTML = `
-    ${videoEmbed}
-    ${showSwitcher ? `
-      <div id="source-switcher" class="flex justify-center gap-4 my-4">
-        <button id="btn-upnshare" class="button"><div class="text">UPNShare</div></button>
-        <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
-      </div>
-    ` : hasUPN ? `
-      <div id="source-switcher" class="flex justify-center gap-4 my-4">
-        <button id="btn-upnshare" class="button active"><div class="text">UPNShare</div></button>
-      </div>
-    ` : hasAbyss ? `
-      <div id="source-switcher" class="flex justify-center gap-4 my-4">
-        <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
-      </div>
-    ` : ''}
-    <h1 class="text-2xl md:text-3xl font-bold text-white mb-3">${escapeHtml(v.title)}</h1>
-    <p class="text-gray-300 mb-4 leading-relaxed">${escapeHtml(v.description)}</p>
-    <p class="text-sm text-gray-400 mb-1">Studio: ${studioHtml}</p>
-    <p class="text-sm text-gray-400 mb-6">Performers: ${performersHtml}</p>
-    ${trailerEmbed}
-  `;
-  // ——— Button logic (runs after DOM is updated) ———
-  const btnUPN = document.getElementById('btn-upnshare');
-  const btnAbyss = document.getElementById('btn-abyss');
-  const embedDiv = videoDetails.querySelector('.embed-container, .abyss-embed');
-  if (!embedDiv) return;
-  const setSource = (src, type) => {
-    // Clear current iframe
-    embedDiv.innerHTML = '';
-    // Create new iframe based on type
-    const isAbyss = type === 'abyss';
-    const iframeClass = isAbyss ? 'abyss-iframe' : 'embed-iframe';
-    const containerClass = isAbyss ? 'abyss-embed' : 'embed-container';
-    const newContainer = document.createElement('div');
-    newContainer.className = containerClass;
-    const iframe = document.createElement('iframe');
-    iframe.id = 'video-iframe';
-    iframe.src = src;
-    iframe.className = iframeClass;
-    iframe.frameBorder = '0';
-    iframe.scrolling = 'no';
-    iframe.allowFullscreen = true;
-    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
-    newContainer.appendChild(iframe);
-    embedDiv.parentNode.replaceChild(newContainer, embedDiv);
-    // Update buttons
-    btnUPN?.classList.toggle('active', type === 'upnshare');
-    btnAbyss?.classList.toggle('active', type === 'abyss');
-  };
-  if (showSwitcher) {
-    btnUPN.addEventListener('click', () => setSource(upnSrc, 'upnshare'));
-    btnAbyss.addEventListener('click', () => setSource(abyssSrc, 'abyss'));
-    // Start with Abyss active if both
-    btnAbyss.classList.add('active');
-    btnUPN.classList.remove('active');
-  } else if (hasUPN) {
-    btnUPN?.classList.add('active');
-  } else if (hasAbyss) {
-    btnAbyss?.classList.add('active');
-  }
-} // ← renderVideo closed correctly
-    // ---------- Search ----------
-    async function ensureSearchIndex() {
-      if (localStorage.getItem('searchIndex')) return;
-      const { scenes, performersById } = await loadAllData();
-      const index = scenes.map(s => {
-        const d = s.data;
-        if (!d?._id) return null;
-        const names = (d.performers || [])
-          .map(perf => {
-            const p = performersById[perf?.parent?._id];
-            return p?.name || null;
-          })
-          .filter(Boolean);
-        return {
-          id: String(d._id),
-          title: (d.title || '').trim(),
-          thumbnail: d.background?.full || '',
-          actresses: names.length ? names.join(', ') : 'Unknown'
-        };
-      }).filter(Boolean);
-      localStorage.setItem('searchIndex', JSON.stringify(index));
-    }
-    function debouncedSearch() {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(handleSearch, 300);
-    }
-    async function handleSearch() {
-      const q = (searchInput?.value || searchInputMobile?.value || '').trim().toLowerCase();
-      if (!q) { hideSuggestions(); return; }
-      await ensureSearchIndex();
-      const index = JSON.parse(localStorage.getItem('searchIndex') || '[]');
-      const results = index
-        .filter(v => v.title.toLowerCase().includes(q) || v.actresses.toLowerCase().includes(q))
-        .slice(0, 5);
-      renderSuggestions(searchSuggestions, results);
-      renderSuggestions(searchSuggestionsMobile, results);
-    }
-    function renderSuggestions(container, list) {
-      container.innerHTML = list.length
-        ? list.map(v => `
-            <div class="flex items-center p-2 cursor-pointer hover:bg-gray-700 rounded" onclick="location.href='video.html?id=${v.id}'">
-              <img src="${v.thumbnail || 'https://via.placeholder.com/40x40'}" class="w-10 h-10 rounded object-cover mr-3"
-                   onerror="this.src='https://via.placeholder.com/40x40?text=No+Image'">
-              <div class="flex-1 min-w-0">
-                <div class="text-sm text-white truncate">${escapeHtml(v.title)}</div>
-                <div class="text-xs text-green-400 truncate">${escapeHtml(v.actresses)}</div>
-              </div>
-            </div>
-          `).join('')
-        : '<div class="p-2 text-sm text-gray-400">No results</div>';
-      container.classList.toggle('hidden', !list.length);
-    }
-    function hideSuggestions() {
-      searchSuggestions.classList.add('hidden');
-      searchSuggestionsMobile.classList.add('hidden');
-    }
-    function handleEnter(e) {
-      if (e.key === 'Enter') {
-        const q = (searchInput?.value || searchInputMobile?.value || '').trim();
-        if (q) location.href = `search.html?query=${encodeURIComponent(q)}`;
+      let videoEmbed = '';
+      if (defaultSrc.includes('short.icu')) {
+        videoEmbed = `<div class="abyss-embed"><iframe id="video-iframe" src="${defaultSrc}" class="abyss-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe></div>`;
+      } else {
+        videoEmbed = `<div class="embed-container"><iframe id="video-iframe" src="${defaultSrc}" class="embed-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe></div>`;
+      }
+
+      videoDetails.innerHTML = `
+        ${videoEmbed}
+        ${showSwitcher ? `
+          <div id="source-switcher" class="flex justify-center gap-4 my-4">
+            <button id="btn-upnshare" class="button"><div class="text">UPNShare</div></button>
+            <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
+          </div>
+        ` : hasUPN ? `
+          <div id="source-switcher" class="flex justify-center gap-4 my-4">
+            <button id="btn-upnshare" class="button active"><div class="text">UPNShare</div></button>
+          </div>
+        ` : hasAbyss ? `
+          <div id="source-switcher" class="flex justify-center gap-4 my-4">
+            <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
+          </div>
+        ` : ''}
+        <h1 class="text-2xl md:text-3xl font-bold text-white mb-3">${escapeHtml(v.title)}</h1>
+        <p class="text-gray-300 mb-4 leading-relaxed">${escapeHtml(v.description)}</p>
+        <p class="text-sm text-gray-400 mb-1">Studio: ${studioHtml}</p>
+        <p class="text-sm text-gray-400 mb-6">Performers: ${performersHtml}</p>
+        ${trailerEmbed}
+      `;
+
+      const btnUPN = document.getElementById('btn-upnshare');
+      const btnAbyss = document.getElementById('btn-abyss');
+      const embedDiv = videoDetails.querySelector('.embed-container, .abyss-embed');
+      if (!embedDiv) return;
+
+      const setSource = (src, type) => {
+        embedDiv.innerHTML = '';
+        const isAbyss = type === 'abyss';
+        const iframeClass = isAbyss ? 'abyss-iframe' : 'embed-iframe';
+        const containerClass = isAbyss ? 'abyss-embed' : 'embed-container';
+        const newContainer = document.createElement('div');
+        newContainer.className = containerClass;
+        const iframe = document.createElement('iframe');
+        iframe.id = 'video-iframe';
+        iframe.src = src;
+        iframe.className = iframeClass;
+        iframe.frameBorder = '0';
+        iframe.scrolling = 'no';
+        iframe.allowFullscreen = true;
+        iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+        newContainer.appendChild(iframe);
+        embedDiv.parentNode.replaceChild(newContainer, embedDiv);
+
+        btnUPN?.classList.toggle('active', type === 'upnshare');
+        btnAbyss?.classList.toggle('active', type === 'abyss');
+      };
+
+      if (showSwitcher) {
+        btnUPN.addEventListener('click', () => setSource(upnSrc, 'upnshare'));
+        btnAbyss.addEventListener('click', () => setSource(abyssSrc, 'abyss'));
+        btnAbyss.classList.add('active');
+        btnUPN.classList.remove('active');
+      } else if (hasUPN) {
+        btnUPN?.classList.add('active');
+      } else if (hasAbyss) {
+        btnAbyss?.classList.add('active');
       }
     }
+
     function escapeHtml(str) {
       const div = document.createElement('div');
       div.textContent = str;
       return div.innerHTML;
     }
-    // ---------- Init ----------
-    loadVideo();
-    ensureSearchIndex();
-    searchInput?.addEventListener('input', debouncedSearch);
-    searchInputMobile?.addEventListener('input', debouncedSearch);
-    document.addEventListener('keydown', handleEnter);
+
+    init();
   </script>
 </body>
 </html>
