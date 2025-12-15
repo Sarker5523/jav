@@ -310,16 +310,54 @@ body {
   ? `<a href="site.html?id=${v.studioId}" class="text-green-400 hover:underline">${escapeHtml(v.studioName)}</a>`
   : `<span class="text-gray-500">${escapeHtml(v.studioName)}</span>`;
 
-      let trailerEmbed = '';
-      if (v.trailer) {
-        const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
-        if (match) {
-          const fileId = match[1];
-          trailerEmbed = `<div class="embed-container"><iframe src="https://drive.google.com/file/d/${fileId}/preview" class="embed-iframe" allow="fullscreen; autoplay" frameborder="0" scrolling="no" allowfullscreen></iframe></div>`;
-        } else {
-          trailerEmbed = `<video controls poster="${v.thumbnail}" class="w-full rounded-lg mb-4 shadow-md aspect-video"><source src="${v.trailer}" type="video/mp4">Your browser does not support video.</video>`;
-        }
-      }
+       let trailerEmbed = '';
+
+if (v.trailer) {
+
+  // 1️⃣ Google Drive link
+  const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  if (match) {
+    const fileId = match[1];
+    trailerEmbed = `
+      <div class="embed-container">
+        <iframe
+          src="https://drive.google.com/file/d/${fileId}/preview"
+          class="embed-iframe"
+          allow="autoplay; fullscreen"
+          frameborder="0"
+          allowfullscreen>
+        </iframe>
+      </div>
+    `;
+  }
+
+  // 2️⃣ Any URL → iframe embed (robust)
+  else if (/^https?:\/\//i.test(v.trailer)) {
+    trailerEmbed = `
+      <div class="embed-container">
+        <iframe
+          src="${v.trailer}"
+          class="embed-iframe"
+          allow="autoplay; fullscreen"
+          frameborder="0"
+          loading="lazy"
+          allowfullscreen>
+        </iframe>
+      </div>
+    `;
+  }
+
+  // 3️⃣ Fallback → direct video file
+  else {
+    trailerEmbed = `
+      <video controls poster="${v.thumbnail}"
+             class="w-full rounded-lg mb-4 shadow-md aspect-video">
+        <source src="${v.trailer}" type="video/mp4">
+        Your browser does not support video.
+      </video>
+    `;
+  }
+}
 
       let videoEmbed = '';
       if (defaultSrc.includes('short.icu')) {
