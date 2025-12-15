@@ -44,6 +44,7 @@
       overflow: hidden;
       border-radius: 0.5rem;
       margin-bottom: 1.5rem;
+      margin-top: 1.5rem;
       box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
       background-color: #000;
     }
@@ -223,13 +224,16 @@ body {
     let allScenes = [], performersById = {}, sitesById = {};
 
     async function loadSites() {
-      const res = await fetch(datasets[currentDataset].sites);
-      if (!res.ok) return;
-      const data = await res.json();
-      sitesById = {};
-      data.forEach(s => { if (s.id != null) sitesById[s.id] = s; });
+  const res = await fetch(datasets[currentDataset].sites);
+  if (!res.ok) return;
+  const data = await res.json();
+  sitesById = {};
+  data.forEach(s => {
+    if (s.id !== undefined && s.name) {  // safer
+      sitesById[s.id] = { id: s.id, name: s.name };
     }
-
+  });
+}
     async function loadCurrentDataset() {
       const ds = datasets[currentDataset];
       const [sceneRes, perfRes] = await Promise.all([
@@ -268,18 +272,8 @@ body {
 
       const siteId = d.site?.id;
       const site = siteId != null ? sitesById[siteId] : null;
-      const studioChain = [];
-      if (site?.name) studioChain.push({ name: site.name, id: site.id });
-      let parentName = null, parentId = null;
-      if (d.site?.parent_id != null) { const p = sitesById[d.site.parent_id]; if (p?.name) { parentName = p.name; parentId = p.id; } }
-      if (!parentName && site?.parent?.name) { parentName = site.parent.name; parentId = site.parent.id; }
-      if (parentName && parentName !== studioChain[0]?.name) studioChain.push({ name: parentName, id: parentId || 0 });
-
-      let networkName = null, networkId = null;
-      if (d.site?.network_id != null) { const n = sitesById[d.site.network_id]; if (n?.name) { networkName = n.name; networkId = n.id; } }
-      if (!networkName && site?.network?.name) { networkName = site.network.name; networkId = site.network.id; }
-      if (networkName && !studioChain.some(s => s.name === networkName)) studioChain.push({ name: networkName, id: networkId || 0 });
-      if (!studioChain.length) studioChain.push({ name: 'Unknown Studio', id: 0 });
+      const studioName = site?.name || 'Unknown Studio';
+      const studioId = site?.id || 0;
 
       const payload = {
         id: String(d._id),
@@ -290,7 +284,8 @@ body {
         videoId: sceneItem.video_id?.trim() || '',
         slug: sceneItem.slug?.trim() || '',
         performers,
-        studioChain
+        studioName,
+        studioId
       };
 
       renderVideo(payload);
@@ -311,11 +306,9 @@ body {
           : `<span class="text-gray-500">${escapeHtml(p.name)}</span>`
         ).join(' , ');
 
-      const studioHtml = v.studioChain
-        .map((s, i) => s.id && i === 0
-          ? `<a href="site.html?id=${s.id}" class="text-green-400 hover:underline">${escapeHtml(s.name)}</a>`
-          : `<span class="text-green-400">${escapeHtml(s.name)}</span>`
-        ).join(' → ');
+      const studioHtml = v.studioId
+  ? `<a href="site.html?id=${v.studioId}" class="text-green-400 hover:underline">${escapeHtml(v.studioName)}</a>`
+  : `<span class="text-gray-500">${escapeHtml(v.studioName)}</span>`;
 
       let trailerEmbed = '';
       if (v.trailer) {
