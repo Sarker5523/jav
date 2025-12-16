@@ -136,11 +136,14 @@
     .video-item img {
       width: 100%;
       height: auto;
+      aspect-ratio: 2 / 3;  /* 2:3 portrait (taller cards) */
+      object-fit: cover;    /* Crops sides if needed */
+      object-position: center;
       display: block;
       border-radius: 12px;
       border: 2px solid rgba(255,255,255,0.05);
       transition: border 0.3s ease;
-    }
+      }
 
     .video-item:hover img {
       border-color: #10b981;
@@ -168,6 +171,7 @@
     .top-info {
       position: absolute;
       bottom: 4px;
+      top: auto;
       left: 12px;
       right: 12px;
       display: flex;
@@ -209,13 +213,13 @@
 
     @media (max-width: 768px) {
       .top-info {
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        padding: 2px 6px;
-      }
-      .performer-name { font-size: 0.6rem; }
-      .performer-count-box { font-size: 0.6rem; padding: 2px 2px; min-width: 65px; }
+    bottom: 8px;  /* More bottom spacing on mobile */
+    left: 8px;
+    right: 8px;
+    padding: 2px 4px;
+  }
+  .performer-name { font-size: 0.6rem; max-width: 60%; }
+  .performer-count-box { font-size: 0.6rem; padding: 2px 2px; min-width: 65px; }
     }
 
     @media (max-width: 1024px) {
