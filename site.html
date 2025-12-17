@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Adult sites on VideoHub.">
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com;
+    img-src * data: https:;
+    font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
+  ">
+  <title>Sites - VideoHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
+  <!-- Toggle Switch CSS -->
+  <style>
+    .checkbox-wrapper-8 .tgl { display: none; }
+    .checkbox-wrapper-8 .tgl,
+    .checkbox-wrapper-8 .tgl:after,
+    .checkbox-wrapper-8 .tgl:before,
+    .checkbox-wrapper-8 .tgl *,
+    .checkbox-wrapper-8 .tgl *:after,
+    .checkbox-wrapper-8 .tgl *:before,
+    .checkbox-wrapper-8 .tgl + .tgl-btn { box-sizing: border-box; }
+    .checkbox-wrapper-8 .tgl::selection,
+    .checkbox-wrapper-8 .tgl + .tgl-btn::selection { background: none; }
+    .checkbox-wrapper-8 .tgl + .tgl-btn {
+      outline: 0; display: block; width: 4em; height: 2em; position: relative; cursor: pointer;
+      user-select: none;
+    }
+    .checkbox-wrapper-8 .tgl + .tgl-btn:after,
+    .checkbox-wrapper-8 .tgl + .tgl-btn:before {
+      position: relative; display: block; content: ""; width: 50%; height: 100%;
+    }
+    .checkbox-wrapper-8 .tgl + .tgl-btn:after { left: 0; }
+    .checkbox-wrapper-8 .tgl + .tgl-btn:before { display: none; }
+    .checkbox-wrapper-8 .tgl:checked + .tgl-btn:after { left: 50%; }
+    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn {
+      overflow: hidden; transform: skew(-10deg); backface-visibility: hidden;
+      transition: all 0.2s ease; background: #888;
+    }
+    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after,
+    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before {
+      transform: skew(10deg); display: inline-block; transition: all 0.2s ease;
+      width: 100%; text-align: center; position: absolute; line-height: 2em;
+      font-weight: bold; color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after { left: 100%; content: attr(data-tg-on); }
+    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before { left: 0; content: attr(data-tg-off); }
+    .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn { background: #86d993; }
+    .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:before { left: -100%; }
+    .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:after { left: 0; }
+  </style>
+
+  <!-- Custom Styles -->
+  <style>
+    body { 
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif; 
+      background-color: #111827; 
+      color: #fff; 
+      margin: 0; 
+      padding: 0; 
+    }
+    nav { background-color: #1f2937; border-bottom: 1px solid #374151; }
+    .video-list-container { max-width: 1920px; margin: 0 auto; padding: 16px; }
+
+    .video-list, .single-video-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 1rem;
+    }
+
+    .video-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .video-item:hover {
+      transform: translateY(-12px) scale(1.05);
+    }
+
+    /* Logo cards: centered logo, full visibility */
+    .video-item.has-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      padding: 20px;
+    }
+
+    .video-item.has-logo img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Text-only cards */
+    .video-item.no-logo {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .video-item.no-logo .site-name {
+      color: white;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-align: center;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+      word-break: break-word;
+      line-height: 1.3;
+    }
+
+    @media (max-width: 1024px) {
+      .video-list, .single-video-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    }
+    @media (max-width: 768px) {
+      .video-list, .single-video-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .video-item.no-logo .site-name { font-size: 1.1rem; }
+      .video-item.has-logo { padding: 15px; }
+    }
+    @media (max-width: 480px) {
+      .video-item.no-logo .site-name { font-size: 1rem; }
+      .video-item.has-logo { padding: 10px; }
+    }
+
+    .pagination { 
+      display: flex; flex-wrap: wrap; justify-content: center; margin: 16px 0; gap: 12px;
+    }
+    .pagination a, .pagination span { 
+      padding: 8px 12px; background-color: #0972fa; color: white; border-radius: 16px; 
+      font-weight: 600; min-width: 52px; text-align: center; transition: all 0.3s ease;
+    }
+    .pagination a:hover { background-color: #65a8ff; transform: translateY(-3px); }
+    .pagination .active { background-color: #65a8ff; box-shadow: inset 0 0 12px rgba(0,0,0,0.6); }
+
+    .search-suggestions { 
+      position: absolute; top: 100%; left: 0; right: 0; background-color: #374151; 
+      border: 1px solid #4b5563; border-radius: 0.5rem; margin-top: 0.25rem; 
+      max-height: 240px; overflow-y: auto; z-index: 50; 
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4); 
+    }
+
+    /* Single site view - with video counter */
+    .single-performer-container {
+      max-width: 1280px; margin: 0 auto; padding: 0 1rem; margin-top: -1rem;
+    }
+    .performer-header-wrapper {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+    .performer-header-line {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 1rem;
+      grid-column: 2;
+    }
+    .performer-header-name {
+      font-size: 2.2rem;
+      font-weight: 300;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #6b98cc, #1aeea0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    /* Video counter badge - same as performer.html */
+    .performer-header-count {
+      position: relative;
+      display: inline-block;
+      padding: 0.2em 0.8em;
+      font-size: 1.2rem;
+      font-weight: 800;
+      font-family: 'Oswald', sans-serif;
+      background: #001d47;
+      border-radius: 50px;
+      box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.404), 0 2px 8px rgba(0, 84, 211, 0.4), 0 0 12px rgba(0, 84, 211, 0.2);
+      border: 1px solid rgba(0, 255, 200, 0.5);
+    }
+    .performer-header-count span {
+      display: inline-block;
+      background: linear-gradient(120deg, #00ffc8, #ffee01, #00ffc8);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-fill-color: transparent;
+      animation: shine 4s linear infinite;
+    }
+    @keyframes shine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
+    .performer-back-link { 
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, #111827, #1f2937);
+      border: 1px solid #10b981;
+      border-radius: 9999px;
+      text-decoration: none;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+      transition: all 0.4s ease;
+    }
+    .performer-back-link:hover { 
+      background: linear-gradient(135deg, #10b981, #34d399);
+      color: #000;
+      transform: translateY(-6px) scale(1.06);
+    }
+
+    .single-video-grid .video-item {
+      aspect-ratio: 16 / 9;
+    }
+    .single-video-grid .video-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .title-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.6);
+      padding: 0.75rem;
+      color: white;
+      font-size: 0.9rem;
+      text-align: center;
+      text-shadow: 0 2px 6px black;
+    }
+
+    #nav-menu a.active { color: #86efac; font-weight: 600; }
+    @media (min-width: 768px) {
+      #middle-group { display: flex; align-items: center; gap: 1.25rem; }
+      #nav-menu ul { flex-direction: row; gap: 1.5rem; padding: 0; }
+      #nav-menu a { padding: 0; color: #d1d5db; background: transparent; }
+      #nav-menu a:hover { background: transparent; color: #86efac; }
+    }
+  </style>
+</head>
+<body class="bg-gray-900">
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="index.html" class="flex items-center space-x-3">
+        <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 w-auto" alt="VideoHub Logo" />
+        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VideoHub</span>
+      </a>
+
+      <div class="checkbox-wrapper-8">
+        <input type="checkbox" id="data-toggle" class="tgl tgl-skewed">
+        <label for="data-toggle" data-tg-off="IRL" data-tg-on="JAV" class="tgl-btn"></label>
+      </div>
+
+      <div id="middle-group" class="hidden md:flex items-center order-2 md:order-1">
+        <div id="nav-menu">
+          <ul>
+            <li><a href="site.html" class="active">Sites</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex md:order-2 space-x-3 items-center">
+        <div class="relative hidden md:block">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+          </div>
+          <input type="text" id="search-navbar" class="block w-full p-2 ps-10 text-sm rounded-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-green-500 focus:border-green-500" placeholder="Search sites..." oninput="debouncedSearch()">
+          <div id="search-suggestions" class="search-suggestions hidden"></div>
+        </div>
+
+        <button data-collapse-toggle="navbar-search" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden hover:bg-gray-700">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="hidden w-full" id="navbar-search">
+        <div class="relative mt-3">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+          </div>
+          <input type="text" id="search-navbar-mobile" class="block w-full p-2 ps-10 text-sm rounded-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-white" placeholder="Search..." oninput="debouncedSearch()">
+          <div id="search-suggestions-mobile" class="search-suggestions hidden"></div>
+        </div>
+
+        <div id="nav-menu" class="mt-4">
+          <ul>
+            <li><a href="site.html">Sites</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="pagination-wrapper"><div class="pagination" id="pagination-top"></div></div>
+
+  <div class="video-list-container">
+    <div id="performer-list"></div>
+  </div>
+
+  <div class="pagination-wrapper"><div class="pagination" id="pagination-bottom"></div></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
+
+  <script>
+    const itemsPerPage = 12;
+    let currentPage = 1;
+    let allSites = [];
+    let searchTimeout;
+
+    const performerList = document.getElementById('performer-list');
+    const paginationTop = document.getElementById('pagination-top');
+    const paginationBottom = document.getElementById('pagination-bottom');
+    const searchInput = document.getElementById('search-navbar');
+    const searchInputMobile = document.getElementById('search-navbar-mobile');
+    const searchSuggestions = document.getElementById('search-suggestions');
+    const searchSuggestionsMobile = document.getElementById('search-suggestions-mobile');
+    const toggle = document.getElementById('data-toggle');
+
+    const datasets = {
+      irl: { sites: 'site.json', scenes: 'scene_details.json' },
+      jav: { sites: 'site_jav.json', scenes: 'scene_details_jav.json' }
+    };
+
+    let currentDataset = localStorage.getItem('selectedDataset') || 'irl';
+    toggle.checked = currentDataset === 'jav';
+
+    toggle.addEventListener('change', () => {
+      currentDataset = toggle.checked ? 'jav' : 'irl';
+      localStorage.setItem('selectedDataset', currentDataset);
+      currentPage = 1;
+      loadSites();
+    });
+
+    function getParams() { return new URLSearchParams(window.location.search); }
+    function getSingleName() { return getParams().get('name'); }
+
+    async function buildSiteList() {
+      const ds = datasets[currentDataset];
+      const [sitesRes, scenesRes] = await Promise.all([
+        fetch(ds.sites).then(r => r.ok ? r.json() : []),
+        fetch(ds.scenes).then(r => r.ok ? r.json() : [])
+      ]);
+
+      const siteMap = new Map();
+
+      sitesRes.forEach(site => {
+        if (!site.id || !site.name) return;
+        siteMap.set(site.id, {
+          id: site.id,
+          name: site.name,
+          image: site.logo || null,
+          scenes: []
+        });
+      });
+
+      scenesRes.forEach(entry => {
+        const d = entry.data;
+        if (!d?._id) return;
+
+        const sceneId = d._id;
+        const sceneTitle = d.title || 'Untitled';
+        const sceneThumb = d.background?.full || 'https://via.placeholder.com/600x338?text=No+Thumb';
+
+        const siteId = d.site?.id;
+
+        if (siteId && siteMap.has(siteId)) {
+          const site = siteMap.get(siteId);
+          if (!site.scenes.some(s => s.id === sceneId)) {
+            site.scenes.push({ id: sceneId, title: sceneTitle, thumb: sceneThumb });
+          }
+        }
+      });
+
+      allSites = Array.from(siteMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    function renderSiteList() {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageSites = allSites.slice(start, end);
+
+      performerList.innerHTML = pageSites.length
+        ? `<div class="video-list">
+            ${pageSites.map(site => {
+              const hasLogo = !!site.image;
+              const cardClass = hasLogo ? 'has-logo' : 'no-logo';
+              return `
+                <div class="video-item ${cardClass}">
+                  <a href="?name=${encodeURIComponent(site.name)}">
+                    ${hasLogo ? `
+                      <img src="${site.image}" alt="${escapeHtml(site.name)}" loading="lazy">
+                    ` : `
+                      <div class="site-name">${escapeHtml(site.name)}</div>
+                    `}
+                  </a>
+                </div>`;
+            }).join('')}
+          </div>`
+        : '<p style="text-align:center; color:#f87171; padding:3rem;">No sites found.</p>';
+    }
+
+    function renderSingleSite(site) {
+  document.title = `${escapeHtml(site.name)} - VideoHub`;
+
+  performerList.innerHTML = `
+    <div class="single-performer-container">
+      <div class="performer-header-wrapper">
+        <a href="site.html" class="performer-back-link">← All Sites</a>
+        
+        <div class="performer-header-line">
+          <h1 class="performer-header-name">${escapeHtml(site.name)}</h1>
+          ${site.scenes.length ? `
+            <span class="performer-header-count">
+              <span>Videos: ${site.scenes.length}</span>
+            </span>
+          ` : ''}
+        </div>
+      </div>
+
+      <div class="performer-info mt-8">
+        ${site.scenes.length ? `
+          <div class="single-video-grid">
+            ${site.scenes.map(s => `
+              <div class="video-item">
+                <a href="video.html?id=${s.id}">
+                  <img src="${s.thumb}" alt="${escapeHtml(s.title)}" loading="lazy"
+                       onerror="this.src='https://via.placeholder.com/600x338?text=No+Thumb'">
+                  <div class="title-overlay">${escapeHtml(s.title)}</div>
+                </a>
+              </div>
+            `).join('')}
+          </div>`
+        : `<p style="text-align:center; color:#9ca3af; padding:4rem;">No videos available yet for this site.</p>`}
+      </div>
+    </div>`;
+
+  paginationTop.classList.add('hidden');
+  paginationBottom.classList.add('hidden');
+}
+
+    function renderPagination() {
+      const totalPages = Math.ceil(allSites.length / itemsPerPage);
+      if (totalPages <= 1) {
+        paginationTop.innerHTML = paginationBottom.innerHTML = '';
+        return;
+      }
+
+      const createLink = (pageNum, text, disabled = false, active = false) => {
+        const el = document.createElement(pageNum === '...' ? 'span' : 'a');
+        el.textContent = text;
+        if (pageNum !== '...') el.href = '#';
+        el.className = active ? 'active' : disabled ? 'disabled' : '';
+        return { el, pageNum };
+      };
+
+      const frag = document.createDocumentFragment();
+      frag.appendChild(createLink(currentPage - 1, 'Prev', currentPage === 1).el);
+      if (currentPage > 3) { frag.appendChild(createLink(1, '1').el); if (currentPage > 4) frag.appendChild(createLink('...', '...').el); }
+      for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+        frag.appendChild(createLink(i, i, false, i === currentPage).el);
+      }
+      if (currentPage < totalPages - 3) { if (currentPage < totalPages - 4) frag.appendChild(createLink('...', '...').el); frag.appendChild(createLink(totalPages, totalPages).el); }
+      frag.appendChild(createLink(currentPage + 1, 'Next', currentPage === totalPages).el);
+
+      paginationTop.innerHTML = paginationBottom.innerHTML = '';
+      paginationTop.appendChild(frag.cloneNode(true));
+      paginationBottom.appendChild(frag.cloneNode(true));
+
+      [paginationTop, paginationBottom].forEach(container => {
+        container.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', e => {
+            e.preventDefault();
+            const text = a.textContent;
+            const newPage = text === 'Prev' ? currentPage - 1 :
+                            text === 'Next' ? currentPage + 1 : parseInt(text);
+            if (newPage < 1 || newPage > totalPages) return;
+
+            currentPage = newPage;
+            const url = new URL(location);
+            url.searchParams.set('page', currentPage);
+            history.pushState({ page: currentPage }, '', url);
+
+            renderSiteList();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+      });
+    }
+
+    function debouncedSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(handleSearch, 300);
+    }
+
+    function handleSearch() {
+      const query = (searchInput?.value || searchInputMobile?.value || '').trim().toLowerCase();
+      const results = allSites.filter(s => s.name.toLowerCase().includes(query)).slice(0, 5);
+
+      const render = container => {
+        container.innerHTML = results.length
+          ? results.map(s => `
+              <div class="flex items-center p-2 cursor-pointer hover:bg-gray-700 rounded"
+                   onclick="location.href='?name=${encodeURIComponent(s.name)}'">
+                ${s.image ? `<img src="${s.image}" alt="${s.name}" class="w-10 h-10 rounded object-cover mr-3">` : 
+                 `<div class="w-10 h-10 rounded bg-gray-700 flex items-center justify-center mr-3 text-xs font-bold">${escapeHtml(s.name.charAt(0))}</div>`}
+                <div class="text-sm text-white">${escapeHtml(s.name)}</div>
+              </div>`).join('')
+          : '<div class="p-2 text-sm text-gray-400">No results</div>';
+        container.classList.toggle('hidden', results.length === 0);
+      };
+      render(searchSuggestions);
+      render(searchSuggestionsMobile);
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    async function loadSites() {
+      await buildSiteList();
+
+      const singleName = getSingleName();
+      if (singleName) {
+        const decoded = decodeURIComponent(singleName).trim();
+        const site = allSites.find(s => s.name.toLowerCase() === decoded.toLowerCase());
+        if (site) {
+          renderSingleSite(site);
+        } else {
+          performerList.innerHTML = `<p style="text-align:center; color:#f87171; padding:3rem;">Site not found: ${escapeHtml(decoded)}</p>`;
+          paginationTop.classList.add('hidden');
+          paginationBottom.classList.add('hidden');
+        }
+      } else {
+        const urlPage = parseInt(getParams().get('page')) || 1;
+        currentPage = Math.max(1, urlPage);
+        renderSiteList();
+        renderPagination();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSites();
+      window.addEventListener('popstate', loadSites);
+      searchInput?.addEventListener('input', debouncedSearch);
+      searchInputMobile?.addEventListener('input', debouncedSearch);
+    });
+  </script>
+</body>
+</html>
