@@ -576,40 +576,51 @@
 
       // Second: scan scenes and count videos
       for (const s of scenesRes) {
-        const d = s.data || {};
-        if (!d._id) continue;
-        const sceneId = String(d._id);
-        const sceneTitle = d.title || 'Untitled';
-        const sceneThumb = d.background?.full || 'https://via.placeholder.com/300x450?text=No+Image';
+  const d = s.data || {};
 
-        const perfArray = Array.isArray(d.performers) ? d.performers : (d.performers ? [d.performers] : []);
+  // Use best available ID for the scene
+  let sceneId = '';
+  if (d._id) {
+    sceneId = String(d._id);
+  } else if (s.slug) {
+    sceneId = s.slug;
+  } else if (s.video_id) {
+    sceneId = s.video_id;
+  } else {
+    continue; // no usable ID at all
+  }
 
-        for (const perf of perfArray) {
-          let matched = false;
+  const sceneTitle = d.title || 'Untitled';
+  const sceneThumb = d.background?.full || 'https://via.placeholder.com/300x450?text=No+Image';
 
-          // Try by parent._id first
-          if (perf?.parent?._id && performerById.has(perf.parent._id)) {
-            const entry = performerById.get(perf.parent._id);
-            entry.videoCount++;
-            if (!entry.scenes.some(sc => sc.id === sceneId)) {
-              entry.scenes.push({ id: sceneId, title: sceneTitle, thumb: sceneThumb });
-            }
-            matched = true;
-          }
+  const perfArray = Array.isArray(d.performers) ? d.performers : (d.performers ? [d.performers] : []);
 
-          // Fallback: direct name match
-          if (!matched && perf?.name && typeof perf.name === 'string') {
-            const nameKey = perf.name.trim().toLowerCase();
-            if (performerByName.has(nameKey)) {
-              const entry = performerByName.get(nameKey);
-              entry.videoCount++;
-              if (!entry.scenes.some(sc => sc.id === sceneId)) {
-                entry.scenes.push({ id: sceneId, title: sceneTitle, thumb: sceneThumb });
-              }
-            }
-          }
+  for (const perf of perfArray) {
+    let matched = false;
+
+    // Priority 1: parent._id reference
+    if (perf?.parent?._id && performerById.has(perf.parent._id)) {
+      const entry = performerById.get(perf.parent._id);
+      entry.videoCount++;
+      if (!entry.scenes.some(sc => sc.id === sceneId)) {
+        entry.scenes.push({ id: sceneId, title: sceneTitle, thumb: sceneThumb });
+      }
+      matched = true;
+    }
+
+    // Priority 2: direct name in scene
+    if (!matched && perf?.name && typeof perf.name === 'string') {
+      const nameKey = perf.name.trim().toLowerCase();
+      if (performerByName.has(nameKey)) {
+        const entry = performerByName.get(nameKey);
+        entry.videoCount++;
+        if (!entry.scenes.some(sc => sc.id === sceneId)) {
+          entry.scenes.push({ id: sceneId, title: sceneTitle, thumb: sceneThumb });
         }
       }
+    }
+  }
+}
 
       allPerformers = Array.from(new Set([...performerById.values(), ...performerByName.values()]))
         .sort((a, b) => a.name.localeCompare(b.name));
