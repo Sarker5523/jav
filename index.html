@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Brave-safe CSP -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
@@ -31,146 +30,65 @@
     .checkbox-wrapper-8 .tgl *:after,
     .checkbox-wrapper-8 .tgl *:before,
     .checkbox-wrapper-8 .tgl + .tgl-btn { box-sizing: border-box; }
-    .checkbox-wrapper-8 .tgl::-moz-selection,
-    .checkbox-wrapper-8 .tgl:after::-moz-selection,
-    .checkbox-wrapper-8 .tgl:before::-moz-selection,
-    .checkbox-wrapper-8 .tgl *::-moz-selection,
-    .checkbox-wrapper-8 .tgl *:after::-moz-selection,
-    .checkbox-wrapper-8 .tgl *:before::-moz-selection,
-    .checkbox-wrapper-8 .tgl + .tgl-btn::-moz-selection,
-    .checkbox-wrapper-8 .tgl::selection,
-    .checkbox-wrapper-8 .tgl:after::selection,
-    .checkbox-wrapper-8 .tgl:before::selection,
-    .checkbox-wrapper-8 .tgl *::selection,
-    .checkbox-wrapper-8 .tgl *:after::selection,
-    .checkbox-wrapper-8 .tgl *:before::selection,
-    .checkbox-wrapper-8 .tgl + .tgl-btn::selection { background: none; }
     .checkbox-wrapper-8 .tgl + .tgl-btn {
-      outline: 0;
-      display: block;
-      width: 4em;
-      height: 2em;
-      position: relative;
-      cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
+      outline: 0; display: block; width: 4em; height: 2em; position: relative; cursor: pointer;
       user-select: none;
     }
     .checkbox-wrapper-8 .tgl + .tgl-btn:after,
     .checkbox-wrapper-8 .tgl + .tgl-btn:before {
-      position: relative;
-      display: block;
-      content: "";
-      width: 50%;
-      height: 100%;
+      position: relative; display: block; content: ""; width: 50%; height: 100%;
     }
     .checkbox-wrapper-8 .tgl + .tgl-btn:after { left: 0; }
-    .checkbox-wrapper-8 .tgl + .tgl-btn:before { display: none; }
     .checkbox-wrapper-8 .tgl:checked + .tgl-btn:after { left: 50%; }
     .checkbox-wrapper-8 .tgl-skewed + .tgl-btn {
-      overflow: hidden;
-      transform: skew(-10deg);
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-      transition: all 0.2s ease;
-      font-family: sans-serif;
-      background: #0063f79f;
+      overflow: hidden; transform: skew(-10deg); backface-visibility: hidden;
+      transition: all 0.2s ease; font-family: sans-serif; background: #0063f79f;
     }
     .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after,
     .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before {
-      transform: skew(10deg);
-      display: inline-block;
-      transition: all 0.2s ease;
-      width: 100%;
-      text-align: center;
-      position: absolute;
-      line-height: 2em;
-      font-weight: bold;
-      color: #fff;
-      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+      transform: skew(10deg); display: inline-block; transition: all 0.2s ease;
+      width: 100%; text-align: center; position: absolute; line-height: 2em;
+      font-weight: bold; color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,0.4);
     }
     .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after { left: 100%; content: attr(data-tg-on); }
     .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before { left: 0; content: attr(data-tg-off); }
-    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:active { background: #0063f79f; }
-    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:active:before { left: -10%; }
     .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn { background: #0a4d31; }
     .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:before { left: -100%; }
     .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:after { left: 0; }
-    .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:active:after { left: 10%; }
   </style>
 
-  <!-- Custom Navigation Styles -->
   <style>
-    nav {
-  background-color: #1f2937;
-  border-bottom: 1px solid #374151;
-}
-.max-w-screen-xl {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 8px;
-}
-
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background-color: #111827;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-}
-    /* Mobile menu links */
-    #nav-menu ul {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      margin: 0;
-      padding: 0.5rem 0 0 0;
-      list-style: none;
-      font-weight: 500;
-    }
-
-    #nav-menu a {
-      display: block;
-      padding: 0.75rem 1.5rem;
-      color: #e5e7eb;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    #nav-menu a:hover {
-      background-color: #374151;
-      color: #86efac;
-    }
-
-    /* Desktop: tight centered group */
+    nav { background-color: #1f2937; border-bottom: 1px solid #374151; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #111827; color: #fff; margin: 0; padding: 0; }
+    #nav-menu ul { display: flex; flex-direction: column; margin: 0; padding: 0.5rem 0 0 0; list-style: none; font-weight: 500; }
+    #nav-menu a { display: block; padding: 0.75rem 1.5rem; color: #e5e7eb; transition: background-color 0.2s, color 0.2s; }
+    #nav-menu a:hover { background-color: #374151; color: #86efac; }
     @media (min-width: 768px) {
-      #middle-group {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem; /* Adjust this to make toggle closer/farther from Sites */
-      }
-
-      #nav-menu ul {
-        flex-direction: row;
-        gap: 1.5rem; /* Space between Sites and Performers */
-        padding: 0;
-      }
-
-      #nav-menu a {
-        padding: 0;
-        color: #d1d5db;
-        background-color: transparent;
-      }
-
-      #nav-menu a:hover {
-        background-color: transparent;
-        color: #86efac;
-      }
+      #middle-group { display: flex; align-items: center; gap: 1.25rem; }
+      #nav-menu ul { flex-direction: row; gap: 1.5rem; padding: 0; }
+      #nav-menu a { padding: 0; color: #d1d5db; background-color: transparent; }
+      #nav-menu a:hover { background-color: transparent; color: #86efac; }
     }
-
-    #nav-menu a.active {
-      color: #86efac;
-      font-weight: 600;
+    #nav-menu a.active { color: #86efac; font-weight: 600; }
+    .actress-box{
+      --base-font-size: 0.7em;
+     position: absolute;
+      font-size: var(--base-font-size);
+      bottom: auto;
+      top: 4px;
+      left: 2px;
+      right: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 3px 5px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+      z-index: 10;
     }
   </style>
 </head>
@@ -179,21 +97,17 @@ body {
   <!-- NAVBAR -->
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <!-- Logo -->
-      <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
+      <a href="index.html" class="flex items-center space-x-3">
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 w-auto" alt="VideoHub Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VideoHub</span>
       </a>
-       <!-- Toggle Switch -->
-        <div class="checkbox-wrapper-8">
-          <input type="checkbox" id="data-toggle" class="tgl tgl-skewed">
-          <label for="data-toggle" data-tg-off="IRL" data-tg-on="JAV" class="tgl-btn"></label>
-        </div>
-      <!-- Middle group: Toggle + Desktop Menu -->
-      <div id="middle-group" class="hidden md:flex items-center order-2 md:order-1">
-       
 
-        <!-- Desktop menu links -->
+      <div class="checkbox-wrapper-8">
+        <input type="checkbox" id="data-toggle" class="tgl tgl-skewed">
+        <label for="data-toggle" data-tg-off="IRL" data-tg-on="JAV" class="tgl-btn"></label>
+      </div>
+
+      <div id="middle-group" class="hidden md:flex items-center order-2 md:order-1">
         <div id="nav-menu">
           <ul>
             <li><a href="site.html">Sites</a></li>
@@ -202,60 +116,42 @@ body {
         </div>
       </div>
 
-      <!-- Right side: Search + Hamburger -->
-      <div class="flex md:order-2 space-x-3 rtl:space-x-reverse items-center">
+      <div class="flex md:order-2 space-x-3 items-center">
         <div class="relative hidden md:block">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
           </div>
-          <input type="text" id="search-navbar"
-                 class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                 placeholder="Search videos, performers, studios..." oninput="debouncedSearch()">
-          <div id="search-suggestions" class="search-suggestions hidden"></div>
+          <input type="text" id="search-navbar" class="block w-full p-2 ps-10 text-sm rounded-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-green-500 focus:border-green-500" placeholder="Search..." oninput="debouncedSearch()">
+          <div id="search-suggestions" class="search-suggestions hidden absolute z-10 w-full bg-gray-800 rounded-b-lg shadow-lg mt-1"></div>
         </div>
 
-        <button data-collapse-toggle="navbar-search" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-          <span class="sr-only">Open main menu</span>
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-          </svg>
+        <button data-collapse-toggle="navbar-search" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden hover:bg-gray-700">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 17 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/></svg>
         </button>
       </div>
 
-      <!-- Mobile Menu (hamburger dropdown) -->
       <div class="hidden w-full" id="navbar-search">
-        <!-- Mobile Search -->
         <div class="relative mt-3">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
           </div>
-          <input type="text" id="search-navbar-mobile"
-                 class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                 placeholder="Search..." oninput="debouncedSearch()">
-          <div id="search-suggestions-mobile" class="search-suggestions hidden"></div>
+          <input type="text" id="search-navbar-mobile" class="block w-full p-2 ps-10 text-sm rounded-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-white" placeholder="Search..." oninput="debouncedSearch()">
+          <div id="search-suggestions-mobile" class="search-suggestions hidden absolute z-10 w-full bg-gray-800 rounded-b-lg shadow-lg mt-1"></div>
         </div>
 
-        <!-- Mobile Links -->
-       
-          <div id="nav-menu">
-            <ul>
-              <li><a href="site.html">Sites</a></li>
-              <li><a href="performer.html">Performers</a></li>
-            </ul>
-          </div>
+        <div id="nav-menu" class="mt-4">
+          <ul>
+            <li><a href="site.html">Sites</a></li>
+            <li><a href="performer.html">Performers</a></li>
+          </ul>
         </div>
       </div>
     </div>
   </nav>
 
   <div class="pagination" id="pagination-top"></div>
-  <div class="video-list-container">
-    <div class="video-list" id="video-list">Loading videos...</div>
+  <div class="video-list-container max-w-7xl mx-auto px-4 py-8">
+    <div class="video-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6" id="video-list">Loading videos...</div>
   </div>
   <div class="pagination" id="pagination-bottom"></div>
 
@@ -278,27 +174,9 @@ body {
 
     let performersById = {};
     let searchTimeout = null;
-    let currentSearchPromise = null;
 
-    // Toggle elements
     const mainToggle = document.getElementById('data-toggle');
-    const mobileToggle = document.getElementById('data-toggle-mobile');
 
-    // Sync toggles
-    if (mobileToggle) {
-      mobileToggle.checked = mainToggle.checked;
-      mobileToggle.addEventListener('change', () => {
-        mainToggle.checked = mobileToggle.checked;
-        mainToggle.dispatchEvent(new Event('change'));
-      });
-    }
-    if (mainToggle) {
-      mainToggle.addEventListener('change', () => {
-        if (mobileToggle) mobileToggle.checked = mainToggle.checked;
-      });
-    }
-
-    // Define datasets
     const datasets = {
       irl: { scenes: 'scene_details.json', performers: 'performer.json' },
       jav: { scenes: 'scene_details_jav.json', performers: 'performer_jav.json' }
@@ -307,34 +185,55 @@ body {
     let currentDataset = localStorage.getItem('selectedDataset') || 'irl';
     mainToggle.checked = currentDataset === 'jav';
 
-    // Load data
     async function loadAllData() {
       const ds = datasets[currentDataset];
       videoList.innerHTML = 'Loading videos...';
 
       try {
         const [sceneRes, perfRes] = await Promise.all([
-          fetch(ds.scenes).then(r => r.ok ? r.json() : Promise.reject(r)),
-          fetch(ds.performers).then(r => r.ok ? r.json() : Promise.reject(r))
+          fetch(ds.scenes).then(r => r.ok ? r.json() : []),
+          fetch(ds.performers).then(r => r.ok ? r.json() : [])
         ]);
 
         performersById = {};
         perfRes.forEach(p => { if (p._id) performersById[p._id] = p; });
 
-        allVideos = sceneRes
-          .map(item => {
-            const d = item.data || {};
-            const performers = d.performers || [];
-            const title = (typeof d.title === 'string' && d.title.trim()) ? d.title.trim() : 'Untitled Video';
+        allVideos = sceneRes.map(item => {
+          const d = item.data || {};
+          const performers = d.performers || [];
+          const title = (typeof d.title === 'string' && d.title.trim()) ? d.title.trim() : 'Untitled Video';
 
-            let actressName = 'Unknown';
-            const allPerformerIds = [];
+          // === BEST LINK IDENTIFIER ===
+          let linkId = '';
+          if (d._id) {
+            linkId = String(d._id);
+          } else if (item.slug && typeof item.slug === 'string' && item.slug.trim()) {
+            linkId = item.slug.trim();
+          } else if (item.video_id) {
+            linkId = item.video_id;
+          } else {
+            linkId = 'unknown-' + Date.now();
+          }
 
-            const perfArray = Array.isArray(performers) ? performers : (typeof performers === 'object' && performers) ? [performers] : [];
+          // === ACTRESS NAME (Handles both formats) ===
+          let actressName = 'Unknown';
+          const allPerformerIds = [];
 
+          const perfArray = Array.isArray(performers) ? performers : (performers ? [performers] : []);
+
+          // Priority 1: Direct name
+          for (const perf of perfArray) {
+            if (perf?.name && typeof perf.name === 'string' && perf.name.trim()) {
+              actressName = perf.name.trim();
+              break;
+            }
+          }
+
+          // Priority 2: Parent ID lookup
+          if (actressName === 'Unknown') {
             for (const perf of perfArray) {
-              const perfId = perf?.parent?._id;
-              if (perfId) {
+              if (perf?.parent?._id) {
+                const perfId = perf.parent._id;
                 allPerformerIds.push(perfId);
                 const p = performersById[perfId];
                 if (p && (p.extras?.gender === 'Female' || !p.extras?.gender)) {
@@ -343,36 +242,33 @@ body {
                 }
               }
             }
+          }
 
-            return {
-              id: String(d._id || ''),
-              video_Id: item.video_Id || '',
-              title,
-              thumbnail: d.background?.full || 'https://via.placeholder.com/300x200?text=No+Image',
-              actressName,
-              allPerformerIds,
-              raw: item
-            };
-          })
-          .filter(v => v.id !== '');
+          // Final fallback
+          if (actressName === 'Unknown' && allPerformerIds.length > 0) {
+            const first = performersById[allPerformerIds[0]];
+            if (first?.name) actressName = first.name;
+          }
+
+          return {
+            linkId,
+            title,
+            thumbnail: d.background?.full || 'https://via.placeholder.com/300x200?text=No+Image',
+            actressName,
+            allPerformerIds,
+            raw: item
+          };
+        }).filter(v => v.linkId);
 
         allVideos.reverse();
         filteredVideos = [...allVideos];
         renderPage();
         renderPagination();
       } catch (err) {
-        console.error('Load error:', err);
-        videoList.innerHTML = `
-          <div class="p-8 text-center text-red-400">
-            <h3>Failed to load videos (${currentDataset.toUpperCase()})</h3>
-            <p>Error: ${err.message}</p>
-            <br>
-            <button onclick="location.reload()" class="px-4 py-2 bg-green-700 text-white rounded">Retry</button>
-          </div>`;
+        videoList.innerHTML = `<div class="col-span-full text-center p-8 text-red-400">Failed to load: ${err.message}<br><button onclick="location.reload()" class="mt-4 px-4 py-2 bg-green-700 rounded">Retry</button></div>`;
       }
     }
 
-    // Toggle handler
     mainToggle.addEventListener('change', () => {
       currentDataset = mainToggle.checked ? 'jav' : 'irl';
       localStorage.setItem('selectedDataset', currentDataset);
@@ -380,7 +276,6 @@ body {
       loadAllData();
     });
 
-    // Render page
     function renderPage() {
       const start = (currentPage - 1) * itemsPerPage;
       const end = start + itemsPerPage;
@@ -388,130 +283,89 @@ body {
 
       videoList.innerHTML = '';
       if (!pageVideos.length) {
-        videoList.innerHTML = '<p class="text-gray-400 p-4 text-center">No videos found.</p>';
+        videoList.innerHTML = '<p class="col-span-full text-center text-gray-400 p-8">No videos found.</p>';
         return;
       }
 
       pageVideos.forEach(v => {
         const div = document.createElement('div');
-        div.className = 'video-item';
+        div.className = 'video-item group';
         div.innerHTML = `
-          <a href="video.html?id=${v.id}">
-            <img src="${v.thumbnail}" alt="${escapeHtml(v.title)}"
-                 loading="lazy"
-                 onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'"
-                 class="w-full h-auto object-cover rounded">
-            <h3 class="line-clamp-2">${escapeHtml(v.title)}</h3>
+          <a href="video.html?id=${encodeURIComponent(v.linkId)}">
+            <img src="${v.thumbnail}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'" class="w-full h-auto object-cover rounded-lg shadow-md group-hover:shadow-xl transition-shadow">
+            <h3 class="mt-2 text-sm line-clamp-2 font-medium">${escapeHtml(v.title)}</h3>
             <div class="actress-box">${escapeHtml(v.actressName)}</div>
           </a>`;
         videoList.appendChild(div);
       });
     }
 
-    // Pagination
     function renderPagination() {
       const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
       [paginationTop, paginationBottom].forEach(container => {
         container.innerHTML = '';
         if (totalPages <= 1) return;
+        container.className = 'flex justify-center my-8 flex-wrap gap-2';
 
-        const maxButtons = 5;
-        let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-        let end = Math.min(totalPages, start + maxButtons - 1);
-        if (end - start < maxButtons - 1) start = Math.max(1, end - maxButtons + 1);
-
-        const btn = (page, txt, disabled = false, active = false) => {
+        const btn = (page, txt, active = false) => {
           const a = document.createElement('a');
-          a.href = disabled ? '#' : `index.html?page=${page}`;
+          a.href = `index.html?page=${page}`;
           a.textContent = txt;
-          a.className = 'px-3 py-2 text-sm font-medium rounded-md';
-          if (active) a.classList.add('active');
-          if (disabled) a.classList.add('disabled');
+          a.className = `px-4 py-2 rounded text-sm ${active ? 'bg-green-600 text-white' : 'bg-gray-700 hover:bg-gray-600'}`;
           return a;
         };
 
-        container.appendChild(btn(1, 'First'));
-        for (let i = start; i <= end; i++) container.appendChild(btn(i, i, false, i === currentPage));
-        container.appendChild(btn(totalPages, 'Last'));
+        container.appendChild(btn(1, '« First'));
+        const max = 5;
+        let start = Math.max(1, currentPage - Math.floor(max / 2));
+        let end = Math.min(totalPages, start + max - 1);
+        if (end - start < max - 1) start = Math.max(1, end - max + 1);
+        for (let i = start; i <= end; i++) {
+          container.appendChild(btn(i, i, i === currentPage));
+        }
+        container.appendChild(btn(totalPages, 'Last »'));
       });
     }
 
-    // Search
     function debouncedSearch() {
-      if (currentSearchPromise) currentSearchPromise.ignore = true;
       clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        const p = handleSearch();
-        currentSearchPromise = p;
-        p.finally(() => { if (currentSearchPromise === p) currentSearchPromise = null; });
-      }, 350);
+      searchTimeout = setTimeout(handleSearch, 350);
     }
 
-    async function handleSearch() {
+    function handleSearch() {
       const query = (searchInput?.value || searchInputMobile?.value || '').trim().toLowerCase();
       hideSuggestions();
 
       if (!query) {
         filteredVideos = [...allVideos];
-        currentPage = 1;
-        renderPage();
-        renderPagination();
-        return;
+      } else {
+        filteredVideos = allVideos.filter(v =>
+          v.title.toLowerCase().includes(query) ||
+          v.actressName.toLowerCase().includes(query) ||
+          v.allPerformerIds.some(id => performersById[id]?.name?.toLowerCase().includes(query))
+        );
       }
-
-      filteredVideos = allVideos.filter(v => {
-        return v.title.toLowerCase().includes(query) ||
-               v.actressName.toLowerCase().includes(query) ||
-               v.allPerformerIds.some(id => performersById[id]?.name?.toLowerCase().includes(query));
-      });
-
       currentPage = 1;
       renderPage();
       renderPagination();
-      showSuggestions(query);
+      if (query) showSuggestions(query);
     }
 
     function showSuggestions(query) {
-      const results = allVideos
-        .filter(v => v.title.toLowerCase().includes(query) || v.actressName.toLowerCase().includes(query))
-        .slice(0, 6);
-
+      const results = allVideos.filter(v => v.title.toLowerCase().includes(query) || v.actressName.toLowerCase().includes(query)).slice(0, 6);
       const render = (container) => {
-        if (!results.length) {
-          container.innerHTML = '<div class="p-2 text-sm text-gray-400">No results</div>';
-          container.classList.add('hidden');
-          return;
-        }
-
-        container.innerHTML = results.map(v => `
-          <div class="suggestion-item flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
-               data-video-id="${v.id}">
-            <img src="${v.thumbnail}" alt="${escapeHtml(v.title)}"
-                 loading="lazy"
-                 class="w-10 h-10 object-cover rounded mr-2"
-                 onerror="this.src='https://via.placeholder.com/40x40?text=No+Image'">
-            <div class="flex-1 min-w-0">
-              <div class="text-sm font-medium truncate">${escapeHtml(v.title)}</div>
-              <div class="text-xs text-green-400">${escapeHtml(v.actressName)}</div>
-            </div>
-          </div>
-        `).join('');
-        container.classList.remove('hidden');
+        container.innerHTML = results.length ? results.map(v => `
+          <div class="suggestion-item flex items-center p-3 hover:bg-gray-700 cursor-pointer border-b border-gray-700 last:border-0" data-link-id="${v.linkId}">
+            <img src="${v.thumbnail}" loading="lazy" class="w-12 h-12 object-cover rounded mr-3" onerror="this.src='https://via.placeholder.com/48x48?text=No+Image'">
+            <div><div class="text-sm font-medium truncate">${escapeHtml(v.title)}</div><div class="text-xs text-green-400">${escapeHtml(v.actressName)}</div></div>
+          </div>`).join('') : '<div class="p-3 text-sm text-gray-400">No results</div>';
+        container.classList.toggle('hidden', !results.length);
       };
-
       render(suggestions);
       render(suggestionsMobile);
-      attachSuggestionClickHandlers();
-    }
-
-    function attachSuggestionClickHandlers() {
       document.querySelectorAll('.suggestion-item').forEach(el => {
         el.onclick = () => {
-          const id = el.dataset.videoId;
-          if (id) {
-            hideSuggestions();
-            window.location.href = `video.html?id=${id}`;
-          }
+          window.location.href = `video.html?id=${encodeURIComponent(el.dataset.linkId)}`;
         };
       });
     }
@@ -521,32 +375,22 @@ body {
       suggestionsMobile.classList.add('hidden');
     }
 
-    // Input sync
-    searchInput?.addEventListener('input', () => {
-      if (searchInputMobile) searchInputMobile.value = searchInput.value;
-      debouncedSearch();
-    });
-    searchInputMobile?.addEventListener('input', () => {
-      if (searchInput) searchInput.value = searchInputMobile.value;
-      debouncedSearch();
-    });
+    searchInput?.addEventListener('input', () => { searchInputMobile.value = searchInput.value; debouncedSearch(); });
+    searchInputMobile?.addEventListener('input', () => { searchInput.value = searchInputMobile.value; debouncedSearch(); });
 
-    // Enter key search
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter' && (document.activeElement === searchInput || document.activeElement === searchInputMobile)) {
-        const q = (searchInput?.value || searchInputMobile?.value || '').trim();
+        const q = (searchInput?.value || '').trim();
         if (q) window.location.href = `search.html?query=${encodeURIComponent(q)}`;
       }
     });
 
-    // Utils
     function escapeHtml(str) {
       const div = document.createElement('div');
       div.textContent = str;
       return div.innerHTML;
     }
 
-    // Init
     loadAllData();
   </script>
 </body>
