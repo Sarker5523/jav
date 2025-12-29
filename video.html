@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
 
-  <!-- Your original button + embed styles -->
+  <!-- Your original button + embed styles — UNCHANGED -->
   <style>
     :root { --color-back: #1a1a1a; }
     .button {
@@ -55,25 +55,25 @@
       border: 0;
     }
   </style>
+
+  <!-- Your original navbar styles — UNCHANGED -->
   <style>
     nav {
-  background-color: #1f2937;
-  border-bottom: 1px solid #374151;
-}
-.max-w-screen-xl {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 8px;
-}
-
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background-color: #111827;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-}
-    /* Mobile menu links */
+      background-color: #1f2937;
+      border-bottom: 1px solid #374151;
+    }
+    .max-w-screen-xl {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 8px;
+    }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #111827;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
     #nav-menu ul {
       display: flex;
       flex-direction: column;
@@ -83,45 +83,37 @@ body {
       list-style: none;
       font-weight: 500;
     }
-
     #nav-menu a {
       display: block;
       padding: 0.75rem 1.5rem;
       color: #e5e7eb;
       transition: background-color 0.2s, color 0.2s;
     }
-
     #nav-menu a:hover {
       background-color: #374151;
       color: #86efac;
     }
-
-    /* Desktop: tight centered group */
     @media (min-width: 768px) {
       #middle-group {
         display: flex;
         align-items: center;
-        gap: 1.25rem; /* Adjust this to make toggle closer/farther from Sites */
+        gap: 1.25rem;
       }
-
       #nav-menu ul {
         flex-direction: row;
-        gap: 1.5rem; /* Space between Sites and Performers */
+        gap: 1.5rem;
         padding: 0;
       }
-
       #nav-menu a {
         padding: 0;
         color: #d1d5db;
         background-color: transparent;
       }
-
       #nav-menu a:hover {
         background-color: transparent;
         color: #86efac;
       }
     }
-
     #nav-menu a.active {
       color: #86efac;
       font-weight: 600;
@@ -130,20 +122,15 @@ body {
 </head>
 <body class="bg-gray-900">
 
-  <!-- NAVBAR -->
+  <!-- NAVBAR — unchanged -->
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <!-- Logo -->
       <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 w-auto" alt="VideoHub Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VideoHub</span>
       </a>
 
-      <!-- Middle group: Toggle + Desktop Menu -->
       <div id="middle-group" class="hidden md:flex items-center order-2 md:order-1">
-    
-
-        <!-- Desktop menu links -->
         <div id="nav-menu">
           <ul>
             <li><a href="site.html">Sites</a></li>
@@ -152,7 +139,6 @@ body {
         </div>
       </div>
 
-      <!-- Right side: Search + Hamburger -->
       <div class="flex md:order-2 space-x-3 rtl:space-x-reverse items-center">
         <div class="relative hidden md:block">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -175,9 +161,7 @@ body {
         </button>
       </div>
 
-      <!-- Mobile Menu (hamburger dropdown) -->
       <div class="hidden w-full" id="navbar-search">
-        <!-- Mobile Search -->
         <div class="relative mt-3">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -190,7 +174,6 @@ body {
           <div id="search-suggestions-mobile" class="search-suggestions hidden"></div>
         </div>
 
-        <!-- Mobile Toggle + Links -->
         <div class="flex flex-col items-start mt-4">
           <div class="mb-4">
             <div class="checkbox-wrapper-8">
@@ -209,7 +192,6 @@ body {
     </div>
   </nav>
 
-
   <div class="content-wrapper max-w-4xl mx-auto p-4">
     <div id="video-details">Loading...</div>
   </div>
@@ -221,81 +203,126 @@ body {
     };
 
     let currentDataset = localStorage.getItem('selectedDataset') || 'irl';
-    let allScenes = [], performersById = {}, sitesById = {};
-
-    async function loadSites() {
-  const res = await fetch(datasets[currentDataset].sites);
-  if (!res.ok) return;
-  const data = await res.json();
-  sitesById = {};
-  data.forEach(s => {
-    if (s.id !== undefined && s.name) {  // safer
-      sitesById[s.id] = { id: s.id, name: s.name };
-    }
-  });
-}
-    async function loadCurrentDataset() {
-      const ds = datasets[currentDataset];
-      const [sceneRes, perfRes] = await Promise.all([
-        fetch(ds.scenes).then(r => r.ok ? r.json() : []),
-        fetch(ds.performers).then(r => r.ok ? r.json() : [])
-      ]);
-      performersById = {};
-      perfRes.forEach(p => { if (p._id) performersById[p._id] = p; });
-      allScenes = sceneRes;
-    }
-
-    async function init() {
-      await Promise.all([loadSites(), loadCurrentDataset()]);
-      loadVideo();
-    }
+    let allScenes = [], performersById = {}, performersByName = {}, sitesById = {};
 
     const videoDetails = document.getElementById('video-details');
+    const mainToggle = document.getElementById('data-toggle-mobile');
 
-    async function loadVideo() {
+    mainToggle.checked = currentDataset === 'jav';
+
+    async function loadData() {
+      const ds = datasets[currentDataset];
+      try {
+        const [sceneRes, perfRes, siteRes] = await Promise.all([
+          fetch(ds.scenes).then(r => r.ok ? r.json() : []),
+          fetch(ds.performers).then(r => r.ok ? r.json() : []),
+          fetch(ds.sites).then(r => r.ok ? r.json() : [])
+        ]);
+
+        // Build performer lookups
+        performersById = {};
+        performersByName = {};
+        perfRes.forEach(p => {
+          if (p.name) {
+            const cleanName = p.name.trim();
+            performersByName[cleanName.toLowerCase()] = p;
+            if (p._id) performersById[p._id] = p;
+          }
+        });
+
+        // Sites
+        sitesById = {};
+        siteRes.forEach(s => {
+          if (s.id !== undefined && s.name) sitesById[s.id] = s;
+        });
+
+        allScenes = sceneRes;
+        renderVideo();
+      } catch (err) {
+        videoDetails.innerHTML = `<p class="text-red-400">Failed to load data: ${err.message}</p>`;
+      }
+    }
+
+    function findScene(identifier) {
+      return allScenes.find(item => {
+        const d = item.data || {};
+        return String(d._id) === identifier ||
+               item.slug === identifier ||
+               item.video_id === identifier;
+      });
+    }
+
+    function renderVideo() {
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
-      if (!id) { videoDetails.innerHTML = '<p class="text-red-400">No video ID</p>'; return; }
+      if (!id) {
+        videoDetails.innerHTML = '<p class="text-red-400">No video ID provided.</p>';
+        return;
+      }
 
-      const sceneItem = allScenes.find(s => String(s.data?._id) === id);
-      if (!sceneItem) { videoDetails.innerHTML = '<p class="text-red-400">Video not found</p>'; return; }
+      const sceneItem = findScene(id);
+      if (!sceneItem) {
+        videoDetails.innerHTML = '<p class="text-red-400">Video not found.</p>';
+        return;
+      }
 
       const d = sceneItem.data || {};
       const perfRaw = d.performers || [];
-      const perfArray = Array.isArray(perfRaw) ? perfRaw : [perfRaw].filter(Boolean);
-      const performers = perfArray.map(perf => {
-        const pid = perf?.parent?._id;
-        const p = pid ? performersById[pid] : null;
-        return { name: p?.name || 'Unknown', id: pid };
-      }).filter(p => p.name);
-      if (!performers.length) performers.push({ name: 'Unknown Performer', id: 0 });
+      const perfArray = Array.isArray(perfRaw) ? perfRaw : (perfRaw ? [perfRaw] : []);
 
-      const siteId = d.site?.id;
-      const site = siteId != null ? sitesById[siteId] : null;
-      const studioName = site?.name || 'Unknown Studio';
-      const studioId = site?.id || 0;
+      const performers = [];
+
+      for (const perf of perfArray) {
+        let name = 'Unknown';
+        let performerId = null;
+
+        // Case 1: Direct name in scene
+        if (perf?.name && typeof perf.name === 'string') {
+          name = perf.name.trim();
+          const lookup = performersByName[name.toLowerCase()];
+          if (lookup) {
+            performerId = lookup._id || null;
+          }
+        }
+        // Case 2: Reference via parent._id
+        else if (perf?.parent?._id) {
+          const pid = perf.parent._id;
+          const p = performersById[pid];
+          if (p) {
+            name = p.name || 'Unknown';
+            performerId = pid;
+          }
+        }
+
+        if (name !== 'Unknown' || performers.length === 0) {
+          performers.push({ name, id: performerId });
+        }
+      }
+
+      if (performers.length === 0) performers.push({ name: 'Unknown Performer', id: null });
+
+      const site = d.site?.id != null ? sitesById[d.site.id] : null;
 
       const payload = {
-        id: String(d._id),
-        title: (d.title || 'Untitled').trim(),
-        description: d.description || 'No description.',
-        thumbnail: d.background?.full || 'https://via.placeholder.com/300x200?text=No+Image',
+        title: d.title?.trim() || 'Untitled Video',
+        description: d.description || 'No description available.',
+        thumbnail: d.background?.full || 'https://via.placeholder.com/800x450?text=No+Image',
         trailer: d.trailer || '',
         videoId: sceneItem.video_id?.trim() || '',
         slug: sceneItem.slug?.trim() || '',
         performers,
-        studioName,
-        studioId
+        studioName: site?.name || 'Unknown Studio',
+        studioId: site?.id || null
       };
 
-      renderVideo(payload);
+      displayVideo(payload);
     }
 
-    // YOUR ORIGINAL renderVideo FUNCTION — UNCHANGED
-    function renderVideo(v) {
+    function displayVideo(v) {
       const hasUPN = !!v.videoId;
       const hasAbyss = !!v.slug;
       const showSwitcher = hasUPN && hasAbyss;
+
       const upnSrc = `https://purn.upn.one/#${v.videoId}`;
       const abyssSrc = `https://short.icu/${v.slug}`;
       const defaultSrc = hasAbyss ? abyssSrc : hasUPN ? upnSrc : 'about:blank';
@@ -307,57 +334,21 @@ body {
         ).join(' , ');
 
       const studioHtml = v.studioId
-  ? `<a href="site.html?id=${v.studioId}" class="text-green-400 hover:underline">${escapeHtml(v.studioName)}</a>`
-  : `<span class="text-gray-500">${escapeHtml(v.studioName)}</span>`;
+        ? `<a href="site.html?id=${v.studioId}" class="text-green-400 hover:underline">${escapeHtml(v.studioName)}</a>`
+        : `<span class="text-gray-500">${escapeHtml(v.studioName)}</span>`;
 
-       let trailerEmbed = '';
-
-if (v.trailer) {
-
-  // 1️⃣ Google Drive link
-  const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
-  if (match) {
-    const fileId = match[1];
-    trailerEmbed = `
-      <div class="embed-container">
-        <iframe
-          src="https://drive.google.com/file/d/${fileId}/preview"
-          class="embed-iframe"
-          allow="autoplay; fullscreen"
-          frameborder="0"
-          allowfullscreen>
-        </iframe>
-      </div>
-    `;
-  }
-
-  // 2️⃣ Any URL → iframe embed (robust)
-  else if (/^https?:\/\//i.test(v.trailer)) {
-    trailerEmbed = `
-      <div class="embed-container">
-        <iframe
-          src="${v.trailer}"
-          class="embed-iframe"
-          allow="autoplay; fullscreen"
-          frameborder="0"
-          loading="lazy"
-          allowfullscreen>
-        </iframe>
-      </div>
-    `;
-  }
-
-  // 3️⃣ Fallback → direct video file
-  else {
-    trailerEmbed = `
-      <video controls poster="${v.thumbnail}"
-             class="w-full rounded-lg mb-4 shadow-md aspect-video">
-        <source src="${v.trailer}" type="video/mp4">
-        Your browser does not support video.
-      </video>
-    `;
-  }
-}
+      let trailerEmbed = '';
+      if (v.trailer) {
+        const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
+        if (match) {
+          const fileId = match[1];
+          trailerEmbed = `<div class="embed-container"><iframe src="https://drive.google.com/file/d/${fileId}/preview" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" allowfullscreen></iframe></div>`;
+        } else if (/^https?:\/\//i.test(v.trailer)) {
+          trailerEmbed = `<div class="embed-container"><iframe src="${v.trailer}" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" loading="lazy" allowfullscreen></iframe></div>`;
+        } else {
+          trailerEmbed = `<video controls poster="${v.thumbnail}" class="w-full rounded-lg mb-4 shadow-md aspect-video"><source src="${v.trailer}" type="video/mp4">Your browser does not support video.</video>`;
+        }
+      }
 
       let videoEmbed = '';
       if (defaultSrc.includes('short.icu')) {
@@ -419,12 +410,6 @@ if (v.trailer) {
       if (showSwitcher) {
         btnUPN.addEventListener('click', () => setSource(upnSrc, 'upnshare'));
         btnAbyss.addEventListener('click', () => setSource(abyssSrc, 'abyss'));
-        btnAbyss.classList.add('active');
-        btnUPN.classList.remove('active');
-      } else if (hasUPN) {
-        btnUPN?.classList.add('active');
-      } else if (hasAbyss) {
-        btnAbyss?.classList.add('active');
       }
     }
 
@@ -434,7 +419,13 @@ if (v.trailer) {
       return div.innerHTML;
     }
 
-    init();
+    mainToggle.addEventListener('change', () => {
+      currentDataset = mainToggle.checked ? 'jav' : 'irl';
+      localStorage.setItem('selectedDataset', currentDataset);
+      loadData();
+    });
+
+    loadData();
   </script>
 </body>
 </html>
