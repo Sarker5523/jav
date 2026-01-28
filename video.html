@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Video Details</title>
 
-  <!-- Flowbite from CDN (your original) -->
+  <!-- Flowbite CDN -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
 
-  <!-- Your original button + embed styles — UNCHANGED -->
+  <!-- Your custom styles -->
+  <link rel="stylesheet" href="styles.css">
+
   <style>
     :root { --color-back: #1a1a1a; }
     .button {
@@ -56,73 +57,26 @@
     }
   </style>
 
-  <!-- Your original navbar styles — UNCHANGED -->
+  <!-- Navbar styles -->
   <style>
-    nav {
-      background-color: #1f2937;
-      border-bottom: 1px solid #374151;
-    }
-    .max-w-screen-xl {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 8px;
-    }
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: #111827;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-    #nav-menu ul {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      margin: 0;
-      padding: 0.5rem 0 0 0;
-      list-style: none;
-      font-weight: 500;
-    }
-    #nav-menu a {
-      display: block;
-      padding: 0.75rem 1.5rem;
-      color: #e5e7eb;
-      transition: background-color 0.2s, color 0.2s;
-    }
-    #nav-menu a:hover {
-      background-color: #374151;
-      color: #86efac;
-    }
+    nav { background-color: #1f2937; border-bottom: 1px solid #374151; }
+    .max-w-screen-xl { max-width: 1280px; margin: 0 auto; padding: 8px; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #111827; color: #fff; margin: 0; padding: 0; }
+    #nav-menu ul { display: flex; flex-direction: column; width: 100%; margin: 0; padding: 0.5rem 0 0 0; list-style: none; font-weight: 500; }
+    #nav-menu a { display: block; padding: 0.75rem 1.5rem; color: #e5e7eb; transition: background-color 0.2s, color 0.2s; }
+    #nav-menu a:hover { background-color: #374151; color: #86efac; }
     @media (min-width: 768px) {
-      #middle-group {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-      }
-      #nav-menu ul {
-        flex-direction: row;
-        gap: 1.5rem;
-        padding: 0;
-      }
-      #nav-menu a {
-        padding: 0;
-        color: #d1d5db;
-        background-color: transparent;
-      }
-      #nav-menu a:hover {
-        background-color: transparent;
-        color: #86efac;
-      }
+      #middle-group { display: flex; align-items: center; gap: 1.25rem; }
+      #nav-menu ul { flex-direction: row; gap: 1.5rem; padding: 0; }
+      #nav-menu a { padding: 0; color: #d1d5db; background-color: transparent; }
+      #nav-menu a:hover { background-color: transparent; color: #86efac; }
     }
-    #nav-menu a.active {
-      color: #86efac;
-      font-weight: 600;
-    }
+    #nav-menu a.active { color: #86efac; font-weight: 600; }
   </style>
 </head>
 <body class="bg-gray-900">
 
-  <!-- NAVBAR — unchanged -->
+  <!-- Navbar (unchanged) -->
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -146,14 +100,11 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
           </div>
-          <input type="text" id="search-navbar"
-                 class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                 placeholder="Search videos, performers, studios..." oninput="debouncedSearch()">
+          <input type="text" id="search-navbar" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search videos, performers, studios..." oninput="debouncedSearch()">
           <div id="search-suggestions" class="search-suggestions hidden"></div>
         </div>
 
-        <button data-collapse-toggle="navbar-search" type="button"
-                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+        <button data-collapse-toggle="navbar-search" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
           <span class="sr-only">Open main menu</span>
           <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
@@ -168,9 +119,7 @@
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
           </div>
-          <input type="text" id="search-navbar-mobile"
-                 class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-                 placeholder="Search..." oninput="debouncedSearch()">
+          <input type="text" id="search-navbar-mobile" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search..." oninput="debouncedSearch()">
           <div id="search-suggestions-mobile" class="search-suggestions hidden"></div>
         </div>
 
@@ -198,8 +147,8 @@
 
   <script>
     const datasets = {
-      irl: { scenes: 'scene_details.json', performers: 'performer.json', sites: 'site.json' },
-      jav: { scenes: 'scene_details_jav.json', performers: 'performer_jav.json', sites: 'site_jav.json' }
+      irl:  { scenes: 'scene_details.json',     performers: 'performer.json',     sites: 'site.json'     },
+      jav:  { scenes: 'scene_details_jav.json', performers: 'performer_jav.json', sites: 'site_jav.json' }
     };
 
     let currentDataset = localStorage.getItem('selectedDataset') || 'irl';
@@ -219,9 +168,7 @@
           fetch(ds.sites).then(r => r.ok ? r.json() : [])
         ]);
 
-        // Build performer lookups
-        performersById = {};
-        performersByName = {};
+        performersById = {}; performersByName = {};
         perfRes.forEach(p => {
           if (p.name) {
             const cleanName = p.name.trim();
@@ -230,7 +177,6 @@
           }
         });
 
-        // Sites
         sitesById = {};
         siteRes.forEach(s => {
           if (s.id !== undefined && s.name) sitesById[s.id] = s;
@@ -271,20 +217,15 @@
       const perfArray = Array.isArray(perfRaw) ? perfRaw : (perfRaw ? [perfRaw] : []);
 
       const performers = [];
-
       for (const perf of perfArray) {
         let name = 'Unknown';
         let performerId = null;
 
-        // Case 1: Direct name in scene
         if (perf?.name && typeof perf.name === 'string') {
           name = perf.name.trim();
           const lookup = performersByName[name.toLowerCase()];
-          if (lookup) {
-            performerId = lookup._id || null;
-          }
+          if (lookup) performerId = lookup._id || null;
         }
-        // Case 2: Reference via parent._id
         else if (perf?.parent?._id) {
           const pid = perf.parent._id;
           const p = performersById[pid];
@@ -304,38 +245,78 @@
       const site = d.site?.id != null ? sitesById[d.site.id] : null;
 
       const payload = {
-        title: d.title?.trim() || 'Untitled Video',
-        description: d.description || 'No description available.',
-        thumbnail: d.background?.full || 'https://via.placeholder.com/800x450?text=No+Image',
-        trailer: d.trailer || '',
-        videoId: sceneItem.video_id?.trim() || '',
-        slug: sceneItem.slug?.trim() || '',
+        title:       d.title?.trim()       || 'Untitled Video',
+        description: d.description         || 'No description available.',
+        thumbnail:   d.background?.full    || 'https://via.placeholder.com/800x450?text=No+Image',
+        trailer:     d.trailer             || '',
+        videoId:     sceneItem.video_id?.trim() || '',
+        slug:        sceneItem.slug?.trim()     || '',
         performers,
-        studioName: site?.name || 'Unknown Studio',
-        studioId: site?.id || null
+        studioName:  site?.name            || 'Unknown Studio',
+        studioId:    site?.id              || null,
+        embeds:      d.embeds || {}        // ← new field support
       };
 
       displayVideo(payload);
     }
 
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
     function displayVideo(v) {
-      const hasUPN = !!v.videoId;
-      const hasAbyss = !!v.slug;
-      const showSwitcher = hasUPN && hasAbyss;
-
-      const upnSrc = `https://purn.upn.one/#${v.videoId}`;
-      const abyssSrc = `https://short.icu/${v.slug}`;
-      const defaultSrc = hasAbyss ? abyssSrc : hasUPN ? upnSrc : 'about:blank';
-
       const performersHtml = v.performers
         .map(p => p.id
           ? `<a href="performer.html?name=${encodeURIComponent(p.name)}" class="text-green-400 hover:underline">${escapeHtml(p.name)}</a>`
           : `<span class="text-gray-500">${escapeHtml(p.name)}</span>`
-        ).join(' , ');
+        ).join(', ');
 
       const studioHtml = v.studioId
         ? `<a href="site.html?id=${v.studioId}" class="text-green-400 hover:underline">${escapeHtml(v.studioName)}</a>`
         : `<span class="text-gray-500">${escapeHtml(v.studioName)}</span>`;
+
+      // ── Collect all available sources ────────────────────────────────
+      const sources = [];
+
+      // New embeds first (higher priority)
+      Object.entries(v.embeds).forEach(([key, url]) => {
+        if (url && typeof url === 'string' && url.trim().startsWith('http')) {
+          sources.push({
+            name: key.charAt(0).toUpperCase() + key.slice(1),
+            url: url.trim(),
+            type: 'generic',
+            provider: key.toLowerCase()
+          });
+        }
+      });
+
+      // Then legacy Abyss
+      if (v.slug) {
+        sources.push({
+          name: 'Abyss',
+          url: `https://short.icu/${v.slug}`,
+          type: 'abyss'
+        });
+      }
+
+      // Then UPN as fallback
+      if (v.videoId) {
+        sources.push({
+          name: 'UPNShare',
+          url: `https://purn.upn.one/#${v.videoId}`,
+          type: 'upn'
+        });
+      }
+
+      if (sources.length === 0) {
+        videoDetails.innerHTML = '<p class="text-red-400 text-center py-12">No playable sources available.</p>';
+        return;
+      }
+
+      // Default = first one (prefers new embeds)
+      const defaultSource = sources[0];
 
       let trailerEmbed = '';
       if (v.trailer) {
@@ -350,29 +331,28 @@
         }
       }
 
-      let videoEmbed = '';
-      if (defaultSrc.includes('short.icu')) {
-        videoEmbed = `<div class="abyss-embed"><iframe id="video-iframe" src="${defaultSrc}" class="abyss-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe></div>`;
-      } else {
-        videoEmbed = `<div class="embed-container"><iframe id="video-iframe" src="${defaultSrc}" class="embed-iframe" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe></div>`;
-      }
+      // Source switcher buttons
+      const switcherHtml = sources.length > 1 ? `
+        <div id="source-switcher" class="flex flex-wrap justify-center gap-3 my-6">
+          ${sources.map((s, i) => `
+            <button data-index="${i}" class="button ${i === 0 ? 'active' : ''}">
+              <div class="text">${s.name}</div>
+            </button>
+          `).join('')}
+        </div>
+      ` : '';
+
+      // Initial embed
+      const isAbyss = defaultSource.type === 'abyss';
+      const initialEmbed = `
+        <div class="${isAbyss ? 'abyss-embed' : 'embed-container'}">
+          <iframe src="${defaultSource.url}" class="${isAbyss ? 'abyss-iframe' : 'embed-iframe'}" frameborder="0" scrolling="no" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+        </div>
+      `;
 
       videoDetails.innerHTML = `
-        ${videoEmbed}
-        ${showSwitcher ? `
-          <div id="source-switcher" class="flex justify-center gap-4 my-4">
-            <button id="btn-upnshare" class="button"><div class="text">UPNShare</div></button>
-            <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
-          </div>
-        ` : hasUPN ? `
-          <div id="source-switcher" class="flex justify-center gap-4 my-4">
-            <button id="btn-upnshare" class="button active"><div class="text">UPNShare</div></button>
-          </div>
-        ` : hasAbyss ? `
-          <div id="source-switcher" class="flex justify-center gap-4 my-4">
-            <button id="btn-abyss" class="button active"><div class="text">Abyss</div></button>
-          </div>
-        ` : ''}
+        ${initialEmbed}
+        ${switcherHtml}
         <h1 class="text-2xl md:text-3xl font-bold text-white mb-3">${escapeHtml(v.title)}</h1>
         <p class="text-gray-300 mb-4 leading-relaxed">${escapeHtml(v.description)}</p>
         <p class="text-sm text-gray-400 mb-1">Studio: ${studioHtml}</p>
@@ -380,43 +360,38 @@
         ${trailerEmbed}
       `;
 
-      const btnUPN = document.getElementById('btn-upnshare');
-      const btnAbyss = document.getElementById('btn-abyss');
-      const embedDiv = videoDetails.querySelector('.embed-container, .abyss-embed');
-      if (!embedDiv) return;
+      // ── Add click handlers for switching ─────────────────────────────
+      const embedWrapper = videoDetails.querySelector('.embed-container, .abyss-embed');
+      const buttons = videoDetails.querySelectorAll('#source-switcher button');
 
-      const setSource = (src, type) => {
-        embedDiv.innerHTML = '';
-        const isAbyss = type === 'abyss';
-        const iframeClass = isAbyss ? 'abyss-iframe' : 'embed-iframe';
-        const containerClass = isAbyss ? 'abyss-embed' : 'embed-container';
-        const newContainer = document.createElement('div');
-        newContainer.className = containerClass;
-        const iframe = document.createElement('iframe');
-        iframe.id = 'video-iframe';
-        iframe.src = src;
-        iframe.className = iframeClass;
-        iframe.frameBorder = '0';
-        iframe.scrolling = 'no';
-        iframe.allowFullscreen = true;
-        iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
-        newContainer.appendChild(iframe);
-        embedDiv.parentNode.replaceChild(newContainer, embedDiv);
+      if (buttons.length > 0) {
+        buttons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.index);
+            const source = sources[idx];
 
-        btnUPN?.classList.toggle('active', type === 'upnshare');
-        btnAbyss?.classList.toggle('active', type === 'abyss');
-      };
+            // Replace embed
+            const isAbyss = source.type === 'abyss';
+            const newContainer = document.createElement('div');
+            newContainer.className = isAbyss ? 'abyss-embed' : 'embed-container';
 
-      if (showSwitcher) {
-        btnUPN.addEventListener('click', () => setSource(upnSrc, 'upnshare'));
-        btnAbyss.addEventListener('click', () => setSource(abyssSrc, 'abyss'));
+            const iframe = document.createElement('iframe');
+            iframe.src = source.url;
+            iframe.className = isAbyss ? 'abyss-iframe' : 'embed-iframe';
+            iframe.frameBorder = '0';
+            iframe.scrolling = 'no';
+            iframe.allowFullscreen = true;
+            iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+
+            newContainer.appendChild(iframe);
+            embedWrapper.parentNode.replaceChild(newContainer, embedWrapper);
+
+            // Update active state
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          });
+        });
       }
-    }
-
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
     }
 
     mainToggle.addEventListener('change', () => {
