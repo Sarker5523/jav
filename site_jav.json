@@ -84,6 +84,10 @@
     "name": "MADONNA"
   },
   {
+    "id": 9490,
+    "name": "Dream Ticket"
+  },
+  {
     "id": 9678,
     "name": "Fitch"
   },
@@ -144,7 +148,8 @@
     "id": 9481,
     "name": "K M Produce",
     "logo": null
-  },{
+  },
+  {
     "id": 30445,
     "name": "Ryupaku",
     "logo": null
