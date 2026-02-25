@@ -319,18 +319,53 @@
       const defaultSource = sources[0];
 
       let trailerEmbed = '';
-      if (v.trailer) {
-        const match = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
-        if (match) {
-          const fileId = match[1];
-          trailerEmbed = `<div class="embed-container"><iframe src="https://drive.google.com/file/d/${fileId}/preview" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" allowfullscreen></iframe></div>`;
-        } else if (/^https?:\/\//i.test(v.trailer)) {
-          trailerEmbed = `<div class="embed-container"><iframe src="${v.trailer}" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" loading="lazy" allowfullscreen></iframe></div>`;
-        } else {
-          trailerEmbed = `<video controls poster="${v.thumbnail}" class="w-full rounded-lg mb-4 shadow-md aspect-video"><source src="${v.trailer}" type="video/mp4">Your browser does not support video.</video>`;
-        }
-      }
 
+if (v.trailer) {
+  // ── Google Drive preview (keep as-is) ───────────────────────────────
+  const driveMatch = v.trailer.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  if (driveMatch) {
+    const fileId = driveMatch[1];
+    trailerEmbed = `
+      <div class="embed-container">
+        <iframe src="https://drive.google.com/file/d/${fileId}/preview" 
+                class="embed-iframe" 
+                allow="autoplay; fullscreen" 
+                frameborder="0" 
+                allowfullscreen></iframe>
+      </div>`;
+  }
+  
+  // ── Direct video file (.mp4, .ts, .m3u8, etc.) ───────────────────────
+  else if (/^https?:\/\//i.test(v.trailer)) {
+    const url = v.trailer.trim();
+    const lowerUrl = url.toLowerCase();
+
+    // Decide MIME type
+    let mimeType = 'video/mp4';
+    if (lowerUrl.endsWith('.ts') || lowerUrl.includes('.ts?')) {
+      mimeType = 'video/mp2t';           // correct type for .ts segments
+    } else if (lowerUrl.endsWith('.m3u8')) {
+      mimeType = 'application/x-mpegURL'; // HLS playlist
+    }
+    // You can add more later: .webm → video/webm, etc.
+
+    trailerEmbed = `
+      <div class="embed-container">
+        <video controls 
+               poster="${v.thumbnail}" 
+               class="w-full rounded-lg mb-4 shadow-md aspect-video"
+               preload="metadata">
+          <source src="${url}" type="${mimeType}">
+          Your browser does not support the video tag.
+        </video>
+      </div>`;
+  }
+
+  // Fallback — rare case
+  else {
+    trailerEmbed = `<p class="text-yellow-400">Invalid trailer format: ${escapeHtml(v.trailer)}</p>`;
+  }
+}
       // Source switcher buttons
       const switcherHtml = sources.length > 1 ? `
         <div id="source-switcher" class="flex flex-wrap justify-center gap-3 my-6">
