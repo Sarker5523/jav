@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PornDB Data Fetcher (Fixed & Stable)</title>
+    <link rel="stylesheet" href="fetcher.css">
+</head>
+
+<body>
+    <h1>PornDB Data Fetcher</h1>
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab('current')">Current Fetch</button>
+        <button class="tab-button" onclick="openTab('history')">History</button>
+    </div>
+
+    <div id="current" class="tab-content active">
+        <div class="box">
+            <h2>Add Scenes</h2>
+            <p class="info">Add as many scenes as you want. Click "Add Row" for more entries.</p>
+            <table id="scenes-table">
+                <thead>
+                    <tr>
+                        <th>Scene ID</th>
+                        <th>Slug</th>
+                        <th>Video ID</th>
+                        <th>Embed Category<br><small>e.g. vidara</small></th>
+                        <th>Embed URL</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" placeholder="e.g. 8251786"></td>
+                        <td><input type="text" placeholder="e.g. Mtc-1JJr_"></td>
+                        <td><input type="text" placeholder="e.g. rchto6"></td>
+                        <td><input type="text" placeholder="e.g. vidara"></td>
+                        <td><input type="text" placeholder="https://vidara.to/e/abc123"></td>
+                        <td><span class="remove-row" onclick="removeRow(this)">×</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="add-row">
+                <button type="button" onclick="addRow()">Add Another Row</button>
+            </div>
+            <button type="button" onclick="fetchAndAddAllScenes()">Fetch All Data</button>
+            <button type="button" onclick="clearTable()">Clear All Rows</button>
+            <div id="scene-status"></div>
+
+            <h3>scene_details_jav.json (minimal filtered – ready to copy)</h3>
+            <pre id="scenes-output">[]</pre>
+            <button type="button" onclick="copyToClipboard('scenes-output')">Copy scene_details_jav.json</button>
+        </div>
+
+        <div class="box">
+            <h2>New Performers (automatically fetched)</h2>
+            <div id="new-performers">
+                <p>No new performers yet.</p>
+            </div>
+            <h3>Append these to your performer_jav.json</h3>
+            <pre id="performers-output">[]</pre>
+            <button type="button" onclick="copyToClipboard('performers-output')">Copy New Performers</button>
+        </div>
+
+        <div class="box">
+            <h2>New Sites (automatically fetched)</h2>
+            <div id="new-sites">
+                <p>No new sites yet.</p>
+            </div>
+            <h3>Append these to your site_jav.json</h3>
+            <pre id="sites-output">[]</pre>
+            <button type="button" onclick="copyToClipboard('sites-output')">Copy New Sites</button>
+        </div>
+    </div>
+
+    <div id="history" class="tab-content">
+        <div class="box">
+            <h2>Historical Records</h2>
+            <label for="history-select">Select Fetch Record:</label>
+            <select id="history-select" onchange="updateHistoryDisplay()">
+                <option value="-1">Select a fetch date...</option>
+            </select>
+            <h3>Scenes</h3>
+            <pre id="history-scenes-output">[]</pre>
+            <button type="button" onclick="copyToClipboard('history-scenes-output')">Copy Historical Scenes</button>
+            <button type="button" onclick="loadHistoryToCurrent('scenes')">Load to Current Scenes</button>
+        </div>
+
+        <div class="box">
+            <h3>Performers</h3>
+            <pre id="history-performers-output">[]</pre>
+            <button type="button" onclick="copyToClipboard('history-performers-output')">Copy Historical Performers</button>
+            <button type="button" onclick="loadHistoryToCurrent('performers')">Load to Current Performers</button>
+        </div>
+
+        <div class="box">
+            <h3>Sites</h3>
+            <pre id="history-sites-output">[]</pre>
+            <button type="button" onclick="copyToClipboard('history-sites-output')">Copy Historical Sites</button>
+            <button type="button" onclick="loadHistoryToCurrent('sites')">Load to Current Sites</button>
+        </div>
+    </div>
+
+    <script>
+        const token = 'Aor5JIDSkxOhmXmNAOYP5Gnr73u7u3UPJZYaevBT2558d467';
+
+        let scenes = [];
+        let newPerformers = [];
+        let newSites = [];
+        let existingPerformerIds = new Set();
+        let existingSiteIds = new Set();
+
+        // History storage key
+        const HISTORY_KEY = 'porndb_history';
+
+        let history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+        let selectedHistoryIndex = -1;
+
+        async function loadExistingData() {
+            try {
+                const res = await fetch('performer_jav.json');
+                if (res.ok) {
+                    const data = await res.json();
+                    data.forEach(p => existingPerformerIds.add(p._id));
+                }
+            } catch (e) { console.log('performer_jav.json not found:', e); }
+
+            try {
+                const res = await fetch('site_jav.json');
+                if (res.ok) {
+                    const data = await res.json();
+                    data.forEach(s => existingSiteIds.add(s.id));
+                }
+            } catch (e) { console.log('site_jav.json not found:', e); }
+        }
+
+        function populateHistorySelect() {
+            const select = document.getElementById('history-select');
+            select.innerHTML = '<option value="-1">Select a fetch date...</option>';
+            history.forEach((session, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = new Date(session.timestamp).toLocaleString();
+                select.appendChild(option);
+            });
+        }
+
+        window.updateHistoryDisplay = function () {
+            selectedHistoryIndex = parseInt(document.getElementById('history-select').value);
+            if (selectedHistoryIndex >= 0) {
+                const session = history[selectedHistoryIndex];
+                document.getElementById('history-scenes-output').textContent = JSON.stringify(session.scenes, null, 2);
+                document.getElementById('history-performers-output').textContent = JSON.stringify(session.performers, null, 2);
+                document.getElementById('history-sites-output').textContent = JSON.stringify(session.sites, null, 2);
+            } else {
+                document.getElementById('history-scenes-output').textContent = '[]';
+                document.getElementById('history-performers-output').textContent = '[]';
+                document.getElementById('history-sites-output').textContent = '[]';
+            }
+        };
+
+        window.onload = async function () {
+            await loadExistingData();
+            populateHistorySelect();
+            updateHistoryDisplay();
+        };
+
+        function addRow() {
+            const table = document.querySelector('#scenes-table tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" placeholder="e.g. 8251786"></td>
+                <td><input type="text" placeholder="e.g. Mtc-1JJr_"></td>
+                <td><input type="text" placeholder="e.g. rchto6"></td>
+                <td><input type="text" placeholder="e.g. vidara"></td>
+                <td><input type="text" placeholder="https://vidara.to/e/abc123"></td>
+                <td><span class="remove-row" onclick="removeRow(this)">×</span></td>
+            `;
+            table.appendChild(row);
+        }
+
+        function removeRow(btn) {
+            if (document.querySelectorAll('#scenes-table tbody tr').length > 1) {
+                btn.parentElement.parentElement.remove();
+            }
+        }
+
+        function clearTable() {
+            const tbody = document.querySelector('#scenes-table tbody');
+            tbody.innerHTML = `
+                <tr>
+                    <td><input type="text" placeholder="e.g. 8251786"></td>
+                    <td><input type="text" placeholder="e.g. Mtc-1JJr_"></td>
+                    <td><input type="text" placeholder="e.g. rchto6"></td>
+                    <td><input type="text" placeholder="e.g. vidara"></td>
+                    <td><input type="text" placeholder="https://vidara.to/e/abc123"></td>
+                    <td><span class="remove-row" onclick="removeRow(this)">×</span></td>
+                </tr>
+            `;
+        }
+
+        async function fetchScene(id) {
+            const response = await fetch(`https://api.theporndb.net/jav/${id}`, {
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`HTTP ${response.status} – ${text || response.statusText}`);
+            }
+            return await response.json();
+        }
+
+        async function fetchPerformer(id) {
+            const response = await fetch(`https://api.theporndb.net/performers/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        }
+
+        async function fetchSite(id) {
+            const response = await fetch(`https://api.theporndb.net/sites/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function splitJavTitle(originalTitle) {
+            let match = originalTitle.match(/^([A-Z0-9-]+):\s*(.+)$/);
+            if (match) {
+                return {
+                    code: match[1].trim(),
+                    title: match[2].trim()
+                };
+            }
+            match = originalTitle.match(/^([A-Z0-9-]+)\s*-\s*(.+)$/);
+            if (match) {
+                return {
+                    code: match[1].trim(),
+                    title: match[2].trim()
+                };
+            }
+            return {
+                code: "",
+                title: originalTitle.trim()
+            };
+        }
+
+        function createMinimalScene(rawScene) {
+            const d = rawScene.data;
+            const performers = (d.performers || []).map(p => ({
+                parent: { _id: p.parent?._id || p._id }
+            })).filter(p => p.parent._id);
+
+            const site = d.site ? { id: d.site.id } : null;
+            const split = splitJavTitle(d.title);
+            const newTitle = split.code || d.title;
+            const newDescription = split.title || d.description || "";
+
+            const minimal = {
+                data: {
+                    _id: d._id,
+                    title: newTitle,
+                    description: newDescription,
+                    date: d.date,
+                    trailer: d.trailer,
+                    background: { full: d.background?.full || null },
+                    performers: performers,
+                    site: site
+                },
+                slug: rawScene.slug,
+                video_id: rawScene.video_id
+            };
+
+            // Include embeds if they exist (from API or manual input)
+            if (d.embeds && Object.keys(d.embeds).length > 0) {
+                minimal.data.embeds = { ...d.embeds };
+            }
+
+            return minimal;
+        }
+
+        window.fetchAndAddAllScenes = async function () {
+            const statusDiv = document.getElementById('scene-status');
+            statusDiv.innerHTML = '';
+
+            try {
+                const rows = document.querySelectorAll('#scenes-table tbody tr');
+                let entries = [];
+
+                for (const row of rows) {
+                    const inputs = row.querySelectorAll('input');
+                    const id       = inputs[0].value.trim();
+                    const slug     = inputs[1].value.trim();
+                    const videoId  = inputs[2].value.trim();
+                    const embedCat = inputs[3].value.trim();
+                    const embedUrl = inputs[4].value.trim();
+
+                    if (id && slug && videoId) {
+                        const embed = {};
+                        if (embedCat && embedUrl) {
+                            embed[embedCat] = embedUrl;
+                        }
+                        entries.push({ id, slug, videoId, embed });
+                    }
+                }
+
+                if (entries.length === 0) {
+                    statusDiv.innerHTML = '<div class="error">Please add at least one complete row (Scene ID, Slug, Video ID).</div>';
+                    return;
+                }
+
+                statusDiv.innerHTML = `<div class="progress">Fetching ${entries.length} scene(s)...<br></div>`;
+
+                scenes = [];
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (const entry of entries) {
+                    try {
+                        const result = await fetchScene(entry.id);
+
+                        // Merge user-provided embed with API embeds (user overrides if same key)
+                        let finalEmbeds = result.data.embeds || {};
+                        if (Object.keys(entry.embed).length > 0) {
+                            finalEmbeds = { ...finalEmbeds, ...entry.embed };
+                        }
+
+                        scenes.push({
+                            data: {
+                                ...result.data,
+                                embeds: finalEmbeds
+                            },
+                            slug: entry.slug,
+                            video_id: entry.videoId
+                        });
+
+                        successCount++;
+                        statusDiv.innerHTML += `<div class="success">✓ Scene ${entry.id} fetched</div>`;
+                    } catch (e) {
+                        errorCount++;
+                        statusDiv.innerHTML += `<div class="error">✗ Scene ${entry.id} failed: ${e.message}</div>`;
+                        console.error(e);
+                    }
+                }
+
+                statusDiv.innerHTML += `<div class="success"><br>${successCount} scene(s) successful, ${errorCount} failed.</div>`;
+                statusDiv.innerHTML += `<div class="progress"><br>Now fetching new performers and sites...</div>`;
+
+                await processNewEntriesAuto(statusDiv);
+
+                const minimalScenes = scenes.map(createMinimalScene);
+                document.getElementById('scenes-output').textContent = JSON.stringify(minimalScenes, null, 2);
+
+                // Save to history
+                saveToHistory(minimalScenes, newPerformers, newSites);
+
+                statusDiv.innerHTML += `<div class="success"><br>✅ All done! You can now copy the outputs. Data saved to history.</div>`;
+
+            } catch (err) {
+                statusDiv.innerHTML += `<div class="error"><br>Unexpected error: ${err.message}<br>
+                    Most likely cause: Invalid or revoked API token. Get a new one from your dashboard.</div>`;
+                console.error(err);
+            }
+        };
+
+        async function processNewEntriesAuto(statusDiv) {
+            const allPerformerIds = new Set();
+            const allSiteIds = new Set();
+
+            scenes.forEach(scene => {
+                if (scene.data.performers) {
+                    scene.data.performers.forEach(p => {
+                        const pid = p.parent?._id || p._id;
+                        if (pid) allPerformerIds.add(pid);
+                    });
+                }
+                if (scene.data.site?.id) allSiteIds.add(scene.data.site.id);
+            });
+
+            const trulyNewPerformerIds = [...allPerformerIds].filter(id => !existingPerformerIds.has(id));
+            const trulyNewSiteIds = [...allSiteIds].filter(id => !existingSiteIds.has(id));
+
+            const perfDiv = document.getElementById('new-performers');
+            const siteDiv = document.getElementById('new-sites');
+
+            perfDiv.innerHTML = trulyNewPerformerIds.length === 0
+                ? '<p><strong>No new performers needed.</strong></p>'
+                : `<p><strong>Fetching ${trulyNewPerformerIds.length} new performer(s)...</strong></p>`;
+
+            siteDiv.innerHTML = trulyNewSiteIds.length === 0
+                ? '<p><strong>No new sites needed.</strong></p>'
+                : `<p><strong>Fetching ${trulyNewSiteIds.length} new site(s)...</strong></p>`;
+
+            newPerformers = [];
+            newSites = [];
+
+            for (const id of trulyNewPerformerIds) {
+                const div = document.createElement('div');
+                div.innerHTML = `Performer ID: ${id} <span class="progress">(fetching...)</span>`;
+                perfDiv.appendChild(div);
+
+                try {
+                    const json = await fetchPerformer(id);
+                    const performer = {
+                        _id: json.data._id,
+                        name: json.data.name,
+                        image: json.data.image || json.data.thumbnail || null
+                    };
+                    newPerformers.push(performer);
+                    div.innerHTML = `Performer ID: ${id} <span class="success">(success)</span>`;
+                } catch (e) {
+                    div.innerHTML = `Performer ID: ${id} <span class="error">(failed: ${e.message})</span>`;
+                    const manual = document.createElement('div');
+                    manual.className = 'manual-input';
+                    manual.innerHTML = `
+                        <textarea id="manual-perf-${id}" placeholder='{"name": "Name", "image": "https://..."}'></textarea><br>
+                        <button type="button" onclick="addManualPerformer('${id}')">Add Manually</button>
+                    `;
+                    div.appendChild(manual);
+                    manual.style.display = 'block';
+                }
+                await delay(500);
+            }
+
+            for (const id of trulyNewSiteIds) {
+                const div = document.createElement('div');
+                div.innerHTML = `Site ID: ${id} <span class="progress">(fetching...)</span>`;
+                siteDiv.appendChild(div);
+
+                try {
+                    const json = await fetchSite(id);
+                    const site = {
+                        id: json.data.id,
+                        name: json.data.name,
+                        logo: json.data.logo || null
+                    };
+                    newSites.push(site);
+                    div.innerHTML = `Site ID: ${id} <span class="success">(success)</span>`;
+                } catch (e) {
+                    div.innerHTML = `Site ID: ${id} <span class="error">(failed: ${e.message})</span>`;
+                    const manual = document.createElement('div');
+                    manual.className = 'manual-input';
+                    manual.innerHTML = `
+                        <textarea id="manual-site-${id}" placeholder='{"name": "Site Name", "logo": "https://..."}'></textarea><br>
+                        <button type="button" onclick="addManualSite('${id}')">Add Manually</button>
+                    `;
+                    div.appendChild(manual);
+                    manual.style.display = 'block';
+                }
+                await delay(500);
+            }
+
+            document.getElementById('performers-output').textContent = JSON.stringify(newPerformers, null, 2);
+            document.getElementById('sites-output').textContent = JSON.stringify(newSites, null, 2);
+        }
+
+        function saveToHistory(newScenes, newPerfs, newSits) {
+            if (newScenes.length > 0 || newPerfs.length > 0 || newSits.length > 0) {
+                const newSession = {
+                    timestamp: new Date().toISOString(),
+                    scenes: newScenes,
+                    performers: newPerfs,
+                    sites: newSits
+                };
+                history.push(newSession);
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+                populateHistorySelect();
+                updateHistoryDisplay();
+            }
+        }
+
+        window.addManualPerformer = function (id) {
+            const text = document.getElementById(`manual-perf-${id}`).value.trim();
+            try {
+                let obj = JSON.parse(text);
+                obj._id = id;
+                if (!obj.name) throw new Error("Missing name");
+                newPerformers.push(obj);
+                document.getElementById('performers-output').textContent = JSON.stringify(newPerformers, null, 2);
+                alert(`Manually added performer ${id}`);
+            } catch (e) {
+                alert(`Invalid JSON: ${e.message}`);
+            }
+        };
+
+        window.addManualSite = function (id) {
+            const text = document.getElementById(`manual-site-${id}`).value.trim();
+            try {
+                let obj = JSON.parse(text);
+                obj.id = id;
+                if (!obj.name) throw new Error("Missing name");
+                newSites.push(obj);
+                document.getElementById('sites-output').textContent = JSON.stringify(newSites, null, 2);
+                alert(`Manually added site ${id}`);
+            } catch (e) {
+                alert(`Invalid JSON: ${e.message}`);
+            }
+        };
+
+        window.copyToClipboard = function (id) {
+            const el = document.getElementById(id);
+            const text = el.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            }).catch(() => {
+                const range = document.createRange();
+                range.selectNode(el);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                alert('Copied (fallback method)');
+            });
+        };
+
+        window.openTab = function (tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.tab-button[onclick="openTab('${tabName}')"]`).classList.add('active');
+        };
+
+        window.loadHistoryToCurrent = function (type) {
+            if (selectedHistoryIndex < 0) {
+                alert('Please select a fetch record from the dropdown.');
+                return;
+            }
+            const session = history[selectedHistoryIndex];
+            if (type === 'scenes') {
+                document.getElementById('scenes-output').textContent = JSON.stringify(session.scenes, null, 2);
+
+                const tbody = document.querySelector('#scenes-table tbody');
+                tbody.innerHTML = '';
+                session.scenes.forEach(scene => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="text" value="${scene.data._id}" readonly></td>
+                        <td><input type="text" value="${scene.slug}" readonly></td>
+                        <td><input type="text" value="${scene.video_id}" readonly></td>
+                        <td><input type="text" value="${scene.data.embeds?.vidara ? 'vidara' : ''}" readonly></td>
+                        <td><input type="text" value="${scene.data.embeds?.vidara || ''}" readonly></td>
+                        <td><span class="remove-row" onclick="removeRow(this)">×</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else if (type === 'performers') {
+                document.getElementById('performers-output').textContent = JSON.stringify(session.performers, null, 2);
+                const perfDiv = document.getElementById('new-performers');
+                perfDiv.innerHTML = '<p><strong>Loaded from history:</strong></p>';
+                session.performers.forEach(p => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `Performer ID: ${p._id} (name: ${p.name})`;
+                    perfDiv.appendChild(div);
+                });
+            } else if (type === 'sites') {
+                document.getElementById('sites-output').textContent = JSON.stringify(session.sites, null, 2);
+                const siteDiv = document.getElementById('new-sites');
+                siteDiv.innerHTML = '<p><strong>Loaded from history:</strong></p>';
+                session.sites.forEach(s => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `Site ID: ${s.id} (name: ${s.name})`;
+                    siteDiv.appendChild(div);
+                });
+            }
+            alert(`Loaded historical ${type} from selected fetch to current tab.`);
+            openTab('current');
+        };
+    </script>
+</body>
+
+</html>
