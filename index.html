@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
-    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com;
+    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com;
     font-src https://fonts.gstatic.com;
     img-src 'self' https:;
     media-src 'self' https:;
@@ -16,144 +17,280 @@
 
   <title>VideoHub</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 
-  <!-- Toggle Switch CSS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
   <style>
-    .checkbox-wrapper-8 .tgl { display: none; }
+    .checkbox-wrapper-8 .tgl {
+      display: none;
+    }
+
     .checkbox-wrapper-8 .tgl,
     .checkbox-wrapper-8 .tgl:after,
     .checkbox-wrapper-8 .tgl:before,
     .checkbox-wrapper-8 .tgl *,
     .checkbox-wrapper-8 .tgl *:after,
     .checkbox-wrapper-8 .tgl *:before,
-    .checkbox-wrapper-8 .tgl + .tgl-btn { box-sizing: border-box; }
-    .checkbox-wrapper-8 .tgl + .tgl-btn {
-      outline: 0; display: block; width: 4em; height: 2em; position: relative; cursor: pointer;
+    .checkbox-wrapper-8 .tgl+.tgl-btn {
+      box-sizing: border-box;
+    }
+
+    .checkbox-wrapper-8 .tgl::-moz-selection,
+    .checkbox-wrapper-8 .tgl:after::-moz-selection,
+    .checkbox-wrapper-8 .tgl:before::-moz-selection,
+    .checkbox-wrapper-8 .tgl *::-moz-selection,
+    .checkbox-wrapper-8 .tgl *:after::-moz-selection,
+    .checkbox-wrapper-8 .tgl *:before::-moz-selection,
+    .checkbox-wrapper-8 .tgl+.tgl-btn::-moz-selection,
+    .checkbox-wrapper-8 .tgl::selection,
+    .checkbox-wrapper-8 .tgl:after::selection,
+    .checkbox-wrapper-8 .tgl:before::selection,
+    .checkbox-wrapper-8 .tgl *::selection,
+    .checkbox-wrapper-8 .tgl *:after::selection,
+    .checkbox-wrapper-8 .tgl *:before::selection,
+    .checkbox-wrapper-8 .tgl+.tgl-btn::selection {
+      background: none;
+    }
+
+    .checkbox-wrapper-8 .tgl+.tgl-btn {
+      outline: 0;
+      display: block;
+      width: 4em;
+      height: 2em;
+      position: relative;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
       user-select: none;
     }
-    .checkbox-wrapper-8 .tgl + .tgl-btn:after,
-    .checkbox-wrapper-8 .tgl + .tgl-btn:before {
-      position: relative; display: block; content: ""; width: 50%; height: 100%;
-    }
-    .checkbox-wrapper-8 .tgl + .tgl-btn:after { left: 0; }
-    .checkbox-wrapper-8 .tgl:checked + .tgl-btn:after { left: 50%; }
-    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn {
-      overflow: hidden; transform: skew(-10deg); backface-visibility: hidden;
-      transition: all 0.2s ease; font-family: sans-serif; background: #0063f79f;
-    }
-    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after,
-    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before {
-      transform: skew(10deg); display: inline-block; transition: all 0.2s ease;
-      width: 100%; text-align: center; position: absolute; line-height: 2em;
-      font-weight: bold; color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,0.4);
-    }
-    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after { left: 100%; content: attr(data-tg-on); }
-    .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before { left: 0; content: attr(data-tg-off); }
-    .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn { background: #0a4d31; }
-    .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:before { left: -100%; }
-    .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:after { left: 0; }
-  </style>
 
-  <style>
-    nav { background-color: #1f2937; border-bottom: 1px solid #374151; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #111827; color: #fff; margin: 0; padding: 0; }
-    #nav-menu ul { display: flex; flex-direction: column; margin: 0; padding: 0.5rem 0 0 0; list-style: none; font-weight: 500; }
-    #nav-menu a { display: block; padding: 0.75rem 1.5rem; color: #e5e7eb; transition: background-color 0.2s, color 0.2s; }
-    #nav-menu a:hover { background-color: #374151; color: #86efac; }
-    @media (min-width: 768px) {
-      #middle-group { display: flex; align-items: center; gap: 1.25rem; }
-      #nav-menu ul { flex-direction: row; gap: 1.5rem; padding: 0; }
-      #nav-menu a { padding: 0; color: #d1d5db; background-color: transparent; }
-      #nav-menu a:hover { background-color: transparent; color: #86efac; }
+    .checkbox-wrapper-8 .tgl+.tgl-btn:after,
+    .checkbox-wrapper-8 .tgl+.tgl-btn:before {
+      position: relative;
+      display: block;
+      content: "";
+      width: 50%;
+      height: 100%;
     }
-    #nav-menu a.active { color: #86efac; font-weight: 600; }
-    .actress-box{
-      --base-font-size: 0.7em;
-     position: absolute;
-      font-size: var(--base-font-size);
-      bottom: auto;
+
+    .checkbox-wrapper-8 .tgl+.tgl-btn:after {
+      left: 0;
+    }
+
+    .checkbox-wrapper-8 .tgl+.tgl-btn:before {
+      display: none;
+    }
+
+    .checkbox-wrapper-8 .tgl:checked+.tgl-btn:after {
+      left: 50%;
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed+.tgl-btn {
+      overflow: hidden;
+      transform: skew(-10deg);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transition: all 0.2s ease;
+      font-family: sans-serif;
+      background: #888;
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:after,
+    .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:before {
+      transform: skew(10deg);
+      display: inline-block;
+      transition: all 0.2s ease;
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      line-height: 2em;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:after {
+      left: 100%;
+      content: attr(data-tg-on);
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:before {
+      left: 0;
+      content: attr(data-tg-off);
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:active {
+      background: #888;
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:active:before {
+      left: -10%;
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn {
+      background: #86d993;
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn:before {
+      left: -100%;
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn:after {
+      left: 0;
+    }
+
+    .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn:active:after {
+      left: 10%;
+    }
+  </style>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #111827;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .actress-box {
+      position: absolute;
+      font-size: 0.7em;
       top: 4px;
       left: 2px;
-      right: auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       padding: 3px 5px;
       border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
       z-index: 10;
     }
+
+    .video-list-container {
+      max-width: 1920px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+
+    .video-item {
+      background-color: transparent;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .video-item:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8);
+    }
+
+    .video-item img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #374151;
+      border: 1px solid #4b5563;
+      border-radius: 0.5rem;
+      margin-top: 0.25rem;
+      max-height: 320px;
+      overflow-y: auto;
+      z-index: 50;
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Pagination */
   </style>
 </head>
+
 <body class="bg-gray-900">
 
-  <!-- NAVBAR -->
-  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="bg-gray-800 border-b border-gray-700">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="index.html" class="flex items-center space-x-3">
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 w-auto" alt="VideoHub Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">VideoHub</span>
       </a>
 
+      <!-- IRL / JAV Toggle -->
       <div class="checkbox-wrapper-8">
         <input type="checkbox" id="data-toggle" class="tgl tgl-skewed">
         <label for="data-toggle" data-tg-off="IRL" data-tg-on="JAV" class="tgl-btn"></label>
       </div>
 
-      <div id="middle-group" class="hidden md:flex items-center order-2 md:order-1">
-        <div id="nav-menu">
-          <ul>
-            <li><a href="site.html">Sites</a></li>
-            <li><a href="performer.html">Performers</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="flex md:order-2 space-x-3 items-center">
-        <div class="relative hidden md:block">
+      <div class="flex items-center gap-4">
+        <!-- Desktop Search -->
+        <div class="relative hidden md:block w-80">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m21 21-6-6m2-5a7 7 0 01-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
-          <input type="text" id="search-navbar" class="block w-full p-2 ps-10 text-sm rounded-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-green-500 focus:border-green-500" placeholder="Search..." oninput="debouncedSearch()">
-          <div id="search-suggestions" class="search-suggestions hidden absolute z-10 w-full bg-gray-800 rounded-b-lg shadow-lg mt-1"></div>
+          <input type="text" id="search-navbar"
+            class="block w-full p-2 ps-10 text-sm bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-green-500 focus:border-green-500"
+            placeholder="Search videos..." oninput="debouncedSearch()">
+          <div id="search-suggestions" class="search-suggestions hidden"></div>
         </div>
 
-        <button data-collapse-toggle="navbar-search" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden hover:bg-gray-700">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 17 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/></svg>
+        <button data-collapse-toggle="navbar-search" type="button" class="md:hidden p-2 text-gray-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
       </div>
 
-      <div class="hidden w-full" id="navbar-search">
-        <div class="relative mt-3">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
-          </div>
-          <input type="text" id="search-navbar-mobile" class="block w-full p-2 ps-10 text-sm rounded-lg bg-gray-700 border-gray-600 placeholder-gray-400 text-white" placeholder="Search..." oninput="debouncedSearch()">
-          <div id="search-suggestions-mobile" class="search-suggestions hidden absolute z-10 w-full bg-gray-800 rounded-b-lg shadow-lg mt-1"></div>
-        </div>
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+        <a href="site.html" class="hover:text-green-400 transition-colors">Sites</a>
+        <a href="performer.html" class="hover:text-green-400 transition-colors">Performers</a>
+      </div>
+    </div>
 
-        <div id="nav-menu" class="mt-4">
-          <ul>
-            <li><a href="site.html">Sites</a></li>
-            <li><a href="performer.html">Performers</a></li>
-          </ul>
+    <!-- Mobile Menu -->
+    <div class="hidden w-full md:hidden" id="navbar-search">
+      <div class="p-4">
+        <div class="relative">
+          <input type="text" id="search-navbar-mobile"
+            class="block w-full p-3 ps-10 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400"
+            placeholder="Search videos..." oninput="debouncedSearch()">
+          <div id="search-suggestions-mobile" class="search-suggestions hidden mt-2"></div>
+        </div>
+        <div class="flex flex-col gap-3 mt-4 text-sm">
+          <a href="site.html" class="hover:text-green-400">Sites</a>
+          <a href="performer.html" class="hover:text-green-400">Performers</a>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="pagination" id="pagination-top"></div>
-  <div class="video-list-container max-w-7xl mx-auto px-4 py-8">
-    <div class="video-list grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6" id="video-list">Loading videos...</div>
+  <!-- ==================== VIDEO GRID + PAGINATION ==================== -->
+  <div class="video-list-container">
+    <div class="pagination" id="pagination-top"></div>
+
+    <div class="video-list" id="video-list">
+      Loading videos...
+    </div>
+
+    <div class="pagination" id="pagination-bottom"></div>
   </div>
-  <div class="pagination" id="pagination-bottom"></div>
 
   <script defer>
     const itemsPerPage = 12;
@@ -161,21 +298,12 @@
     let filteredVideos = [];
     let currentPage = 1;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('page')) currentPage = Math.max(1, parseInt(urlParams.get('page')) || 1);
-
     const videoList = document.getElementById('video-list');
     const paginationTop = document.getElementById('pagination-top');
     const paginationBottom = document.getElementById('pagination-bottom');
-    const searchInput = document.getElementById('search-navbar');
-    const searchInputMobile = document.getElementById('search-navbar-mobile');
-    const suggestions = document.getElementById('search-suggestions');
-    const suggestionsMobile = document.getElementById('search-suggestions-mobile');
 
     let performersById = {};
     let searchTimeout = null;
-
-    const mainToggle = document.getElementById('data-toggle');
 
     const datasets = {
       irl: { scenes: 'scene_details.json', performers: 'performer.json' },
@@ -183,11 +311,20 @@
     };
 
     let currentDataset = localStorage.getItem('selectedDataset') || 'irl';
-    mainToggle.checked = currentDataset === 'jav';
+    const toggle = document.getElementById('data-toggle');
+    toggle.checked = currentDataset === 'jav';
+
+    // Toggle IRL/JAV
+    toggle.addEventListener('change', () => {
+      currentDataset = toggle.checked ? 'jav' : 'irl';
+      localStorage.setItem('selectedDataset', currentDataset);
+      currentPage = 1;
+      loadAllData();
+    });
 
     async function loadAllData() {
       const ds = datasets[currentDataset];
-      videoList.innerHTML = 'Loading videos...';
+      videoList.innerHTML = '<p class="col-span-full text-center py-12 text-gray-400">Loading videos...</p>';
 
       try {
         const [sceneRes, perfRes] = await Promise.all([
@@ -200,54 +337,26 @@
 
         allVideos = sceneRes.map(item => {
           const d = item.data || {};
-          const performers = d.performers || [];
-          const title = (typeof d.title === 'string' && d.title.trim()) ? d.title.trim() : 'Untitled Video';
+          const title = (d.title && typeof d.title === 'string') ? d.title.trim() : 'Untitled Video';
+          const linkId = d._id ? String(d._id) : (item.slug || item.video_id || 'unknown');
 
-          // === BEST LINK IDENTIFIER ===
-          let linkId = '';
-          if (d._id) {
-            linkId = String(d._id);
-          } else if (item.slug && typeof item.slug === 'string' && item.slug.trim()) {
-            linkId = item.slug.trim();
-          } else if (item.video_id) {
-            linkId = item.video_id;
-          } else {
-            linkId = 'unknown-' + Date.now();
-          }
-
-          // === ACTRESS NAME (Handles both formats) ===
           let actressName = 'Unknown';
+          const perfArray = Array.isArray(d.performers) ? d.performers : (d.performers ? [d.performers] : []);
           const allPerformerIds = [];
 
-          const perfArray = Array.isArray(performers) ? performers : (performers ? [performers] : []);
-
-          // Priority 1: Direct name
           for (const perf of perfArray) {
-            if (perf?.name && typeof perf.name === 'string' && perf.name.trim()) {
+            if (perf?.name) {
               actressName = perf.name.trim();
               break;
             }
-          }
-
-          // Priority 2: Parent ID lookup
-          if (actressName === 'Unknown') {
-            for (const perf of perfArray) {
-              if (perf?.parent?._id) {
-                const perfId = perf.parent._id;
-                allPerformerIds.push(perfId);
-                const p = performersById[perfId];
-                if (p && (p.extras?.gender === 'Female' || !p.extras?.gender)) {
-                  actressName = p.name || 'Unknown';
-                  break;
-                }
+            if (perf?.parent?._id) {
+              allPerformerIds.push(perf.parent._id);
+              const p = performersById[perf.parent._id];
+              if (p && p.name) {
+                actressName = p.name;
+                break;
               }
             }
-          }
-
-          // Final fallback
-          if (actressName === 'Unknown' && allPerformerIds.length > 0) {
-            const first = performersById[allPerformerIds[0]];
-            if (first?.name) actressName = first.name;
           }
 
           return {
@@ -255,45 +364,38 @@
             title,
             thumbnail: d.background?.full || 'https://via.placeholder.com/300x200?text=No+Image',
             actressName,
-            allPerformerIds,
-            raw: item
+            allPerformerIds
           };
         }).filter(v => v.linkId);
 
         allVideos.reverse();
         filteredVideos = [...allVideos];
-        renderPage();
+        renderCurrentPage();
         renderPagination();
       } catch (err) {
-        videoList.innerHTML = `<div class="col-span-full text-center p-8 text-red-400">Failed to load: ${err.message}<br><button onclick="location.reload()" class="mt-4 px-4 py-2 bg-green-700 rounded">Retry</button></div>`;
+        videoList.innerHTML = `<div class="col-span-full text-center p-8 text-red-400">Failed to load videos.<br><button onclick="location.reload()" class="mt-4 px-6 py-2 bg-green-700 rounded">Retry</button></div>`;
       }
     }
 
-    mainToggle.addEventListener('change', () => {
-      currentDataset = mainToggle.checked ? 'jav' : 'irl';
-      localStorage.setItem('selectedDataset', currentDataset);
-      currentPage = 1;
-      loadAllData();
-    });
+    function renderCurrentPage() {
+      videoList.innerHTML = '';
 
-    function renderPage() {
       const start = (currentPage - 1) * itemsPerPage;
       const end = start + itemsPerPage;
       const pageVideos = filteredVideos.slice(start, end);
 
-      videoList.innerHTML = '';
       if (!pageVideos.length) {
-        videoList.innerHTML = '<p class="col-span-full text-center text-gray-400 p-8">No videos found.</p>';
+        videoList.innerHTML = '<p class="col-span-full text-center py-12 text-gray-400">No videos found.</p>';
         return;
       }
 
       pageVideos.forEach(v => {
         const div = document.createElement('div');
-        div.className = 'video-item group';
+        div.className = 'video-item group relative';
         div.innerHTML = `
           <a href="video.html?id=${encodeURIComponent(v.linkId)}">
-            <img src="${v.thumbnail}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'" class="w-full h-auto object-cover rounded-lg shadow-md group-hover:shadow-xl transition-shadow">
-            <h3 class="mt-2 text-sm line-clamp-2 font-medium">${escapeHtml(v.title)}</h3>
+            <img src="${v.thumbnail}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+            <h3 class="mt-2 px-1 text-sm font-medium line-clamp-2">${escapeHtml(v.title)}</h3>
             <div class="actress-box">${escapeHtml(v.actressName)}</div>
           </a>`;
         videoList.appendChild(div);
@@ -302,88 +404,94 @@
 
     function renderPagination() {
       const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
-      [paginationTop, paginationBottom].forEach(container => {
-        container.innerHTML = '';
-        if (totalPages <= 1) return;
-        container.className = 'flex justify-center my-8 flex-wrap gap-2';
+      if (totalPages <= 1) {
+        paginationTop.innerHTML = paginationBottom.innerHTML = '';
+        return;
+      }
 
-        const btn = (page, txt, active = false) => {
-          const a = document.createElement('a');
-          a.href = `index.html?page=${page}`;
-          a.textContent = txt;
-          a.className = `px-4 py-2 rounded text-sm ${active ? 'bg-green-600 text-white' : 'bg-gray-700 hover:bg-gray-600'}`;
-          return a;
-        };
+      const createPagination = () => {
+        const frag = document.createDocumentFragment();
 
-        container.appendChild(btn(1, '« First'));
-        const max = 5;
-        let start = Math.max(1, currentPage - Math.floor(max / 2));
-        let end = Math.min(totalPages, start + max - 1);
-        if (end - start < max - 1) start = Math.max(1, end - max + 1);
+        // First Button
+        const first = document.createElement('a');
+        first.href = "#";
+        first.textContent = "« First";
+        first.onclick = (e) => { e.preventDefault(); changePage(1); };
+        frag.appendChild(first);
+
+        // Prev Button
+        const prev = document.createElement('a');
+        prev.href = "#";
+        prev.textContent = "Prev";
+        prev.onclick = (e) => { e.preventDefault(); changePage(currentPage - 1); };
+        frag.appendChild(prev);
+
+        // Page Numbers
+        const start = Math.max(1, currentPage - 2);
+        const end = Math.min(totalPages, currentPage + 2);
+
         for (let i = start; i <= end; i++) {
-          container.appendChild(btn(i, i, i === currentPage));
+          const a = document.createElement('a');
+          a.href = "#";
+          a.textContent = i;
+          if (i === currentPage) a.className = 'active';
+          a.onclick = (e) => { e.preventDefault(); changePage(i); };
+          frag.appendChild(a);
         }
-        container.appendChild(btn(totalPages, 'Last »'));
-      });
+
+        // Next Button
+        const next = document.createElement('a');
+        next.href = "#";
+        next.textContent = "Next";
+        next.onclick = (e) => { e.preventDefault(); changePage(currentPage + 1); };
+        frag.appendChild(next);
+
+        // Last Button
+        const last = document.createElement('a');
+        last.href = "#";
+        last.textContent = "Last »";
+        last.onclick = (e) => { e.preventDefault(); changePage(totalPages); };
+        frag.appendChild(last);
+
+        return frag;
+      };
+
+      paginationTop.innerHTML = '';
+      paginationBottom.innerHTML = '';
+      paginationTop.appendChild(createPagination());
+      paginationBottom.appendChild(createPagination());
+    }
+
+    function changePage(newPage) {
+      const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
+      if (newPage < 1 || newPage > totalPages) return;
+
+      currentPage = newPage;
+      renderCurrentPage();
+      renderPagination();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function debouncedSearch() {
       clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(handleSearch, 350);
+      searchTimeout = setTimeout(() => {
+        const query = (document.getElementById('search-navbar').value ||
+          document.getElementById('search-navbar-mobile').value || '').trim().toLowerCase();
+
+        if (!query) {
+          filteredVideos = [...allVideos];
+        } else {
+          filteredVideos = allVideos.filter(v =>
+            v.title.toLowerCase().includes(query) ||
+            v.actressName.toLowerCase().includes(query)
+          );
+        }
+
+        currentPage = 1;
+        renderCurrentPage();
+        renderPagination();
+      }, 300);
     }
-
-    function handleSearch() {
-      const query = (searchInput?.value || searchInputMobile?.value || '').trim().toLowerCase();
-      hideSuggestions();
-
-      if (!query) {
-        filteredVideos = [...allVideos];
-      } else {
-        filteredVideos = allVideos.filter(v =>
-          v.title.toLowerCase().includes(query) ||
-          v.actressName.toLowerCase().includes(query) ||
-          v.allPerformerIds.some(id => performersById[id]?.name?.toLowerCase().includes(query))
-        );
-      }
-      currentPage = 1;
-      renderPage();
-      renderPagination();
-      if (query) showSuggestions(query);
-    }
-
-    function showSuggestions(query) {
-      const results = allVideos.filter(v => v.title.toLowerCase().includes(query) || v.actressName.toLowerCase().includes(query)).slice(0, 6);
-      const render = (container) => {
-        container.innerHTML = results.length ? results.map(v => `
-          <div class="suggestion-item flex items-center p-3 hover:bg-gray-700 cursor-pointer border-b border-gray-700 last:border-0" data-link-id="${v.linkId}">
-            <img src="${v.thumbnail}" loading="lazy" class="w-12 h-12 object-cover rounded mr-3" onerror="this.src='https://via.placeholder.com/48x48?text=No+Image'">
-            <div><div class="text-sm font-medium truncate">${escapeHtml(v.title)}</div><div class="text-xs text-green-400">${escapeHtml(v.actressName)}</div></div>
-          </div>`).join('') : '<div class="p-3 text-sm text-gray-400">No results</div>';
-        container.classList.toggle('hidden', !results.length);
-      };
-      render(suggestions);
-      render(suggestionsMobile);
-      document.querySelectorAll('.suggestion-item').forEach(el => {
-        el.onclick = () => {
-          window.location.href = `video.html?id=${encodeURIComponent(el.dataset.linkId)}`;
-        };
-      });
-    }
-
-    function hideSuggestions() {
-      suggestions.classList.add('hidden');
-      suggestionsMobile.classList.add('hidden');
-    }
-
-    searchInput?.addEventListener('input', () => { searchInputMobile.value = searchInput.value; debouncedSearch(); });
-    searchInputMobile?.addEventListener('input', () => { searchInput.value = searchInputMobile.value; debouncedSearch(); });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && (document.activeElement === searchInput || document.activeElement === searchInputMobile)) {
-        const q = (searchInput?.value || '').trim();
-        if (q) window.location.href = `search.html?query=${encodeURIComponent(q)}`;
-      }
-    });
 
     function escapeHtml(str) {
       const div = document.createElement('div');
@@ -391,7 +499,11 @@
       return div.innerHTML;
     }
 
-    loadAllData();
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadAllData();
+    });
   </script>
 </body>
+
 </html>
