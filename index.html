@@ -461,14 +461,15 @@
     }
 
     function changePage(newPage) {
-      const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
-      if (newPage < 1 || newPage > totalPages) return;
+  const totalPages = Math.ceil(filteredVideos.length / itemsPerPage);
+  if (newPage < 1 || newPage > totalPages) return;
 
-      currentPage = newPage;
-      renderCurrentPage();
-      renderPagination();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  currentPage = newPage;
+  window.history.pushState({page: newPage}, '', `?page=${newPage}`);
+  renderCurrentPage();
+  renderPagination();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
     function debouncedSearch() {
       clearTimeout(searchTimeout);
@@ -501,6 +502,16 @@
     document.addEventListener('DOMContentLoaded', () => {
       loadAllData();
     });
+    // Handle browser back/forward buttons
+window.addEventListener('popstate', (event) => {
+  currentPage = event.state?.page || 1;
+  renderCurrentPage();
+  renderPagination();
+});
+
+// Load correct page from URL on start
+const urlParams = new URLSearchParams(window.location.search);
+currentPage = parseInt(urlParams.get('page')) || 1;
   </script>
 </body>
 
