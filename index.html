@@ -234,7 +234,11 @@
         <input type="checkbox" id="data-toggle" class="tgl tgl-skewed">
         <label for="data-toggle" data-tg-off="IRL" data-tg-on="JAV" class="tgl-btn"></label>
       </div>
-
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+        <a href="site.html" class="hover:text-green-400 transition-colors">Sites</a>
+        <a href="performer.html" class="hover:text-green-400 transition-colors">Performers</a>
+      </div>
       <div class="flex items-center gap-4">
         <!-- Desktop Search -->
         <div class="relative hidden md:block w-80">
@@ -256,26 +260,20 @@
           </svg>
         </button>
       </div>
-
-      <!-- Navigation Links -->
-      <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-        <a href="site.html" class="hover:text-green-400 transition-colors">Sites</a>
-        <a href="performer.html" class="hover:text-green-400 transition-colors">Performers</a>
-      </div>
     </div>
 
     <!-- Mobile Menu -->
     <div class="hidden w-full md:hidden" id="navbar-search">
+      <div class="flex flex-col gap-3 mt-4 text-sm">
+        <a href="site.html" class="hover:text-green-400">Sites</a>
+        <a href="performer.html" class="hover:text-green-400">Performers</a>
+      </div>
       <div class="p-4">
         <div class="relative">
           <input type="text" id="search-navbar-mobile"
             class="block w-full p-3 ps-10 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400"
             placeholder="Search videos..." oninput="debouncedSearch()">
           <div id="search-suggestions-mobile" class="search-suggestions hidden mt-2"></div>
-        </div>
-        <div class="flex flex-col gap-3 mt-4 text-sm">
-          <a href="site.html" class="hover:text-green-400">Sites</a>
-          <a href="performer.html" class="hover:text-green-400">Performers</a>
         </div>
       </div>
     </div>
