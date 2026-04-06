@@ -10,7 +10,9 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
 
-  <!-- Your custom styles -->
+  <!-- mpegts.js for .TS files -->
+  <script src="https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.min.js"></script>
+
   <link rel="stylesheet" href="styles.css">
 
   <style>
@@ -67,7 +69,8 @@
     }
 
     .embed-container,
-    .abyss-embed {
+    .abyss-embed,
+    .ts-player-container {
       position: relative;
       width: 100%;
       padding-bottom: 56.25%;
@@ -89,9 +92,18 @@
       height: 100%;
       border: 0;
     }
+
+    .ts-player-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
   </style>
 
-  <!-- Navbar styles -->
+  <!-- Navbar styles (unchanged) -->
   <style>
     nav {
       background-color: #1f2937;
@@ -300,6 +312,12 @@
       });
     }
 
+    function isTSFile(url) {
+      if (!url) return false;
+      const u = url.toLowerCase().trim();
+      return u.endsWith('.ts') || u.includes('.ts?') || u.includes('/ts/');
+    }
+
     function renderVideo() {
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
@@ -356,7 +374,7 @@
         performers,
         studioName: site?.name || 'Unknown Studio',
         studioId: site?.id || null,
-        embeds: d.embeds || {}        // ← new field support
+        embeds: d.embeds || {}
       };
 
       displayVideo(payload);
@@ -366,6 +384,59 @@
       const div = document.createElement('div');
       div.textContent = str;
       return div.innerHTML;
+    }
+
+    // ====================== TS Player Function ======================
+    // ====================== TS Player Function (Fixed) ======================
+    function createTSPlayer(trailerUrl, thumbnail) {
+      const containerId = 'ts-player-' + Math.random().toString(36).substr(2, 9);
+
+      let html = `
+    <div class="ts-player-container" id="${containerId}">
+      <video id="ts-video-${containerId}" controls autoplay style="width:100%; height:100%; background:#000;"></video>
+    </div>
+  `;
+
+      // We will initialize the player AFTER the HTML is inserted into the document
+      setTimeout(() => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const videoElement = document.getElementById(`ts-video-${containerId}`);
+        if (!videoElement) return;
+
+        if (typeof mpegts === 'undefined' || !mpegts.getFeatureList().mseLivePlayback) {
+          container.innerHTML = `<p class="text-red-400 p-8 text-center">mpegts.js is not supported in this browser (needs MSE).</p>`;
+          return;
+        }
+
+        const player = mpegts.createPlayer({
+          type: 'mpegts',
+          url: trailerUrl,
+          isLive: false,
+          cors: true,
+          enableWorker: true,
+          lazyLoad: true
+        });
+
+        player.attachMediaElement(videoElement);
+
+        player.load().then(() => {
+          if (thumbnail) videoElement.poster = thumbnail;
+          videoElement.play().catch(() => { }); // ignore autoplay block
+        }).catch(err => {
+          a
+          console.error("TS Player load error:", err);
+          container.innerHTML += `<p class="text-red-400 text-center mt-2">Failed to load TS stream: ${err.message}</p>`;
+        });
+
+        player.on(mpegts.Events.ERROR, (error) => {
+          console.error("TS Player Error:", error);
+        });
+
+      }, 300); // Increased delay + using unique ID for reliability
+
+      return html;
     }
 
     function displayVideo(v) {
@@ -379,10 +450,9 @@
         ? `<a href="site.html?id=${v.studioId}" class="text-green-400 hover:underline">${escapeHtml(v.studioName)}</a>`
         : `<span class="text-gray-500">${escapeHtml(v.studioName)}</span>`;
 
-      // ── Collect all available sources ────────────────────────────────
+      // Collect sources (unchanged)
       const sources = [];
 
-      // New embeds first (higher priority)
       Object.entries(v.embeds).forEach(([key, url]) => {
         if (url && typeof url === 'string' && url.trim().startsWith('http')) {
           sources.push({
@@ -394,22 +464,12 @@
         }
       });
 
-      // Then legacy Abyss
       if (v.slug) {
-        sources.push({
-          name: 'Abyss',
-          url: `https://short.icu/${v.slug}`,
-          type: 'abyss'
-        });
+        sources.push({ name: 'Abyss', url: `https://short.icu/${v.slug}`, type: 'abyss' });
       }
 
-      // Then UPN as fallback
       if (v.videoId) {
-        sources.push({
-          name: 'UPNShare',
-          url: `https://purn.upn.one/#${v.videoId}`,
-          type: 'upn'
-        });
+        sources.push({ name: 'UPNShare', url: `https://purn.upn.one/#${v.videoId}`, type: 'upn' });
       }
 
       if (sources.length === 0) {
@@ -417,38 +477,35 @@
         return;
       }
 
-      // Default = first one (prefers new embeds)
       const defaultSource = sources[0];
 
+      // ==================== TRAILER LOGIC WITH TS SUPPORT ====================
       let trailerEmbed = '';
+
       if (v.trailer) {
         const trailerUrl = v.trailer.trim();
 
-        // Case 1: Google Drive
-        const driveMatch = trailerUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
-        if (driveMatch) {
-          const fileId = driveMatch[1];
+        if (isTSFile(trailerUrl)) {
+          // Use mpegts.js for .ts files
+          trailerEmbed = createTSPlayer(trailerUrl, v.thumbnail);
+        }
+        else if (trailerUrl.match(/\/d\/([a-zA-Z0-9-_]+)/)) {
+          // Google Drive
+          const fileId = trailerUrl.match(/\/d\/([a-zA-Z0-9-_]+)/)[1];
           trailerEmbed = `<div class="embed-container"><iframe src="https://drive.google.com/file/d/${fileId}/preview" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" allowfullscreen></iframe></div>`;
         }
-        // Case 2: Direct MP4 (this is where we force video + thumbnail)
         else if (trailerUrl.match(/\.(mp4|webm|ogg)$/i) || trailerUrl.includes('cdn1.mypervmom.com')) {
+          // Direct MP4 / WebM
           trailerEmbed = `
             <div class="embed-container">
-              <video controls poster="${v.thumbnail}" 
-                     class="embed-iframe w-full rounded-lg" 
-                     src="${trailerUrl}" 
-                     type="video/mp4">
+              <video controls poster="${v.thumbnail}" class="embed-iframe w-full rounded-lg" src="${trailerUrl}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>`;
         }
-        // Case 3: Other embed URLs (Vidara, etc.) - treat as iframe
         else if (/^https?:\/\//i.test(trailerUrl)) {
+          // Other iframe embeds
           trailerEmbed = `<div class="embed-container"><iframe src="${trailerUrl}" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" loading="lazy" allowfullscreen></iframe></div>`;
-        }
-        // Fallback
-        else {
-          trailerEmbed = `<video controls poster="${v.thumbnail}" class="w-full rounded-lg mb-4 shadow-md aspect-video"><source src="${trailerUrl}" type="video/mp4">Your browser does not support video.</video>`;
         }
       }
 
@@ -463,7 +520,7 @@
         </div>
       ` : '';
 
-      // Initial embed
+      // Initial embed (main video player)
       const isAbyss = defaultSource.type === 'abyss';
       const initialEmbed = `
         <div class="${isAbyss ? 'abyss-embed' : 'embed-container'}">
@@ -481,7 +538,7 @@
         ${trailerEmbed}
       `;
 
-      // ── Add click handlers for switching ─────────────────────────────
+      // Source switcher logic (unchanged)
       const embedWrapper = videoDetails.querySelector('.embed-container, .abyss-embed');
       const buttons = videoDetails.querySelectorAll('#source-switcher button');
 
@@ -491,7 +548,6 @@
             const idx = parseInt(btn.dataset.index);
             const source = sources[idx];
 
-            // Replace embed
             const isAbyss = source.type === 'abyss';
             const newContainer = document.createElement('div');
             newContainer.className = isAbyss ? 'abyss-embed' : 'embed-container';
@@ -507,7 +563,6 @@
             newContainer.appendChild(iframe);
             embedWrapper.parentNode.replaceChild(newContainer, embedWrapper);
 
-            // Update active state
             buttons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
           });
