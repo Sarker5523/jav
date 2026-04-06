@@ -10,7 +10,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
 
-  <!-- mpegts.js for .TS files -->
+  <!-- mpegts.js for .TS and .m3u8 support -->
   <script src="https://cdn.jsdelivr.net/npm/mpegts.js@latest/dist/mpegts.min.js"></script>
 
   <link rel="stylesheet" href="styles.css">
@@ -70,7 +70,7 @@
 
     .embed-container,
     .abyss-embed,
-    .ts-player-container {
+    .stream-player-container {
       position: relative;
       width: 100%;
       padding-bottom: 56.25%;
@@ -93,7 +93,7 @@
       border: 0;
     }
 
-    .ts-player-container video {
+    .stream-player-container video {
       position: absolute;
       top: 0;
       left: 0;
@@ -103,7 +103,7 @@
     }
   </style>
 
-  <!-- Navbar styles (unchanged) -->
+  <!-- Navbar styles -->
   <style>
     nav {
       background-color: #1f2937;
@@ -180,7 +180,7 @@
 
 <body class="bg-gray-900">
 
-  <!-- Navbar (unchanged) -->
+  <!-- Navbar -->
   <nav class="bg-white border-gray-200 dark:bg-gray-900">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="index.html" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -208,48 +208,7 @@
           </div>
           <input type="text" id="search-navbar"
             class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-            placeholder="Search videos, performers, studios..." oninput="debouncedSearch()">
-          <div id="search-suggestions" class="search-suggestions hidden"></div>
-        </div>
-
-        <button data-collapse-toggle="navbar-search" type="button"
-          class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-          <span class="sr-only">Open main menu</span>
-          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M1 1h15M1 7h15M1 13h15" />
-          </svg>
-        </button>
-      </div>
-
-      <div class="hidden w-full" id="navbar-search">
-        <div class="relative mt-3">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-              fill="none" viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-            </svg>
-          </div>
-          <input type="text" id="search-navbar-mobile"
-            class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-            placeholder="Search..." oninput="debouncedSearch()">
-          <div id="search-suggestions-mobile" class="search-suggestions hidden"></div>
-        </div>
-
-        <div class="flex flex-col items-start mt-4">
-          <div class="mb-4">
-            <div class="checkbox-wrapper-8">
-              <input type="checkbox" id="data-toggle-mobile" class="tgl tgl-skewed">
-              <label for="data-toggle-mobile" data-tg-off="IRL" data-tg-on="JAV" class="tgl-btn"></label>
-            </div>
-          </div>
-          <div id="nav-menu">
-            <ul>
-              <li><a href="site.html">Sites</a></li>
-              <li><a href="performer.html">Performers</a></li>
-            </ul>
-          </div>
+            placeholder="Search videos..." oninput="debouncedSearch()">
         </div>
       </div>
     </div>
@@ -270,8 +229,6 @@
 
     const videoDetails = document.getElementById('video-details');
     const mainToggle = document.getElementById('data-toggle-mobile');
-
-    mainToggle.checked = currentDataset === 'jav';
 
     async function loadData() {
       const ds = datasets[currentDataset];
@@ -306,16 +263,77 @@
     function findScene(identifier) {
       return allScenes.find(item => {
         const d = item.data || {};
-        return String(d._id) === identifier ||
-          item.slug === identifier ||
-          item.video_id === identifier;
+        return String(d._id) === identifier || item.slug === identifier || item.video_id === identifier;
       });
     }
 
-    function isTSFile(url) {
+    // ==================== Support for both .ts and .m3u8 ====================
+    function isStreamFile(url) {
       if (!url) return false;
       const u = url.toLowerCase().trim();
-      return u.endsWith('.ts') || u.includes('.ts?') || u.includes('/ts/');
+      return (
+        u.endsWith('.ts') || u.includes('.ts?') || u.includes('/ts/') ||
+        u.includes('.m3u8') || u.includes('/hls/') || u.includes('/playlist')
+      );
+    }
+
+    // Unified Player for .ts and .m3u8
+    function createStreamPlayer(streamUrl, thumbnail) {
+      const containerId = 'stream-player-' + Math.random().toString(36).substr(2, 9);
+
+      let html = `
+        <div class="stream-player-container" id="${containerId}">
+          <video id="stream-video-${containerId}" controls autoplay style="width:100%; height:100%; background:#000;"></video>
+        </div>
+      `;
+
+      setTimeout(() => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const videoElement = document.getElementById(`stream-video-${containerId}`);
+        if (!videoElement) return;
+
+        if (typeof mpegts === 'undefined' || !mpegts.getFeatureList().mseLivePlayback) {
+          container.innerHTML = `<p class="text-red-400 p-8 text-center">mpegts.js is not supported in this browser.</p>`;
+          return;
+        }
+
+        const urlLower = streamUrl.toLowerCase();
+        const isHLS = urlLower.includes('.m3u8');
+
+        const player = mpegts.createPlayer({
+          type: isHLS ? 'hls' : 'mpegts',
+          url: streamUrl,
+          isLive: false,
+          cors: true,
+          enableWorker: true,
+          lazyLoad: true,
+          ...(isHLS && { maxBufferLength: 30 })
+        });
+
+        player.attachMediaElement(videoElement);
+
+        player.load().then(() => {
+          if (thumbnail) videoElement.poster = thumbnail;
+          videoElement.play().catch(() => { });
+        }).catch(err => {
+          console.error("Stream load error:", err);
+          container.innerHTML += `<p class="text-red-400 text-center mt-2">Failed to load stream: ${err.message}</p>`;
+        });
+
+        player.on(mpegts.Events.ERROR, (error) => {
+          console.error("Stream Player Error:", error);
+        });
+      }, 300);
+
+      return html;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
     }
 
     function renderVideo() {
@@ -345,8 +363,7 @@
           name = perf.name.trim();
           const lookup = performersByName[name.toLowerCase()];
           if (lookup) performerId = lookup._id || null;
-        }
-        else if (perf?.parent?._id) {
+        } else if (perf?.parent?._id) {
           const pid = perf.parent._id;
           const p = performersById[pid];
           if (p) {
@@ -354,7 +371,6 @@
             performerId = pid;
           }
         }
-
         if (name !== 'Unknown' || performers.length === 0) {
           performers.push({ name, id: performerId });
         }
@@ -380,65 +396,6 @@
       displayVideo(payload);
     }
 
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
-    }
-
-    // ====================== TS Player Function ======================
-    // ====================== TS Player Function (Fixed) ======================
-    function createTSPlayer(trailerUrl, thumbnail) {
-      const containerId = 'ts-player-' + Math.random().toString(36).substr(2, 9);
-
-      let html = `
-    <div class="ts-player-container" id="${containerId}">
-      <video id="ts-video-${containerId}" controls autoplay style="width:100%; height:100%; background:#000;"></video>
-    </div>
-  `;
-
-      // We will initialize the player AFTER the HTML is inserted into the document
-      setTimeout(() => {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-
-        const videoElement = document.getElementById(`ts-video-${containerId}`);
-        if (!videoElement) return;
-
-        if (typeof mpegts === 'undefined' || !mpegts.getFeatureList().mseLivePlayback) {
-          container.innerHTML = `<p class="text-red-400 p-8 text-center">mpegts.js is not supported in this browser (needs MSE).</p>`;
-          return;
-        }
-
-        const player = mpegts.createPlayer({
-          type: 'mpegts',
-          url: trailerUrl,
-          isLive: false,
-          cors: true,
-          enableWorker: true,
-          lazyLoad: true
-        });
-
-        player.attachMediaElement(videoElement);
-
-        player.load().then(() => {
-          if (thumbnail) videoElement.poster = thumbnail;
-          videoElement.play().catch(() => { }); // ignore autoplay block
-        }).catch(err => {
-          a
-          console.error("TS Player load error:", err);
-          container.innerHTML += `<p class="text-red-400 text-center mt-2">Failed to load TS stream: ${err.message}</p>`;
-        });
-
-        player.on(mpegts.Events.ERROR, (error) => {
-          console.error("TS Player Error:", error);
-        });
-
-      }, 300); // Increased delay + using unique ID for reliability
-
-      return html;
-    }
-
     function displayVideo(v) {
       const performersHtml = v.performers
         .map(p => p.id
@@ -450,27 +407,20 @@
         ? `<a href="site.html?id=${v.studioId}" class="text-green-400 hover:underline">${escapeHtml(v.studioName)}</a>`
         : `<span class="text-gray-500">${escapeHtml(v.studioName)}</span>`;
 
-      // Collect sources (unchanged)
+      // Collect sources
       const sources = [];
-
       Object.entries(v.embeds).forEach(([key, url]) => {
         if (url && typeof url === 'string' && url.trim().startsWith('http')) {
           sources.push({
             name: key.charAt(0).toUpperCase() + key.slice(1),
             url: url.trim(),
-            type: 'generic',
-            provider: key.toLowerCase()
+            type: 'generic'
           });
         }
       });
 
-      if (v.slug) {
-        sources.push({ name: 'Abyss', url: `https://short.icu/${v.slug}`, type: 'abyss' });
-      }
-
-      if (v.videoId) {
-        sources.push({ name: 'UPNShare', url: `https://purn.upn.one/#${v.videoId}`, type: 'upn' });
-      }
+      if (v.slug) sources.push({ name: 'Abyss', url: `https://short.icu/${v.slug}`, type: 'abyss' });
+      if (v.videoId) sources.push({ name: 'UPNShare', url: `https://purn.upn.one/#${v.videoId}`, type: 'upn' });
 
       if (sources.length === 0) {
         videoDetails.innerHTML = '<p class="text-red-400 text-center py-12">No playable sources available.</p>';
@@ -479,37 +429,27 @@
 
       const defaultSource = sources[0];
 
-      // ==================== TRAILER LOGIC WITH TS SUPPORT ====================
+      // Trailer with .ts + .m3u8 support
       let trailerEmbed = '';
-
       if (v.trailer) {
         const trailerUrl = v.trailer.trim();
-
-        if (isTSFile(trailerUrl)) {
-          // Use mpegts.js for .ts files
-          trailerEmbed = createTSPlayer(trailerUrl, v.thumbnail);
-        }
-        else if (trailerUrl.match(/\/d\/([a-zA-Z0-9-_]+)/)) {
-          // Google Drive
+        if (isStreamFile(trailerUrl)) {
+          trailerEmbed = createStreamPlayer(trailerUrl, v.thumbnail);
+        } else if (trailerUrl.match(/\/d\/([a-zA-Z0-9-_]+)/)) {
           const fileId = trailerUrl.match(/\/d\/([a-zA-Z0-9-_]+)/)[1];
           trailerEmbed = `<div class="embed-container"><iframe src="https://drive.google.com/file/d/${fileId}/preview" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" allowfullscreen></iframe></div>`;
-        }
-        else if (trailerUrl.match(/\.(mp4|webm|ogg)$/i) || trailerUrl.includes('cdn1.mypervmom.com')) {
-          // Direct MP4 / WebM
+        } else if (trailerUrl.match(/\.(mp4|webm|ogg)$/i) || trailerUrl.includes('cdn1.mypervmom.com')) {
           trailerEmbed = `
             <div class="embed-container">
               <video controls poster="${v.thumbnail}" class="embed-iframe w-full rounded-lg" src="${trailerUrl}" type="video/mp4">
                 Your browser does not support the video tag.
               </video>
             </div>`;
-        }
-        else if (/^https?:\/\//i.test(trailerUrl)) {
-          // Other iframe embeds
-          trailerEmbed = `<div class="embed-container"><iframe src="${trailerUrl}" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" loading="lazy" allowfullscreen></iframe></div>`;
+        } else if (/^https?:\/\//i.test(trailerUrl)) {
+          trailerEmbed = `<div class="embed-container"><iframe src="${trailerUrl}" class="embed-iframe" allow="autoplay; fullscreen" frameborder="0" allowfullscreen></iframe></div>`;
         }
       }
 
-      // Source switcher buttons
       const switcherHtml = sources.length > 1 ? `
         <div id="source-switcher" class="flex flex-wrap justify-center gap-3 my-6">
           ${sources.map((s, i) => `
@@ -520,7 +460,6 @@
         </div>
       ` : '';
 
-      // Initial embed (main video player)
       const isAbyss = defaultSource.type === 'abyss';
       const initialEmbed = `
         <div class="${isAbyss ? 'abyss-embed' : 'embed-container'}">
@@ -538,7 +477,7 @@
         ${trailerEmbed}
       `;
 
-      // Source switcher logic (unchanged)
+      // Source switcher logic
       const embedWrapper = videoDetails.querySelector('.embed-container, .abyss-embed');
       const buttons = videoDetails.querySelectorAll('#source-switcher button');
 
@@ -547,14 +486,14 @@
           btn.addEventListener('click', () => {
             const idx = parseInt(btn.dataset.index);
             const source = sources[idx];
+            const isAbyssSrc = source.type === 'abyss';
 
-            const isAbyss = source.type === 'abyss';
             const newContainer = document.createElement('div');
-            newContainer.className = isAbyss ? 'abyss-embed' : 'embed-container';
+            newContainer.className = isAbyssSrc ? 'abyss-embed' : 'embed-container';
 
             const iframe = document.createElement('iframe');
             iframe.src = source.url;
-            iframe.className = isAbyss ? 'abyss-iframe' : 'embed-iframe';
+            iframe.className = isAbyssSrc ? 'abyss-iframe' : 'embed-iframe';
             iframe.frameBorder = '0';
             iframe.scrolling = 'no';
             iframe.allowFullscreen = true;
@@ -570,11 +509,15 @@
       }
     }
 
-    mainToggle.addEventListener('change', () => {
-      currentDataset = mainToggle.checked ? 'jav' : 'irl';
-      localStorage.setItem('selectedDataset', currentDataset);
-      loadData();
-    });
+    // Toggle between IRL and JAV
+    if (mainToggle) {
+      mainToggle.checked = currentDataset === 'jav';
+      mainToggle.addEventListener('change', () => {
+        currentDataset = mainToggle.checked ? 'jav' : 'irl';
+        localStorage.setItem('selectedDataset', currentDataset);
+        loadData();
+      });
+    }
 
     loadData();
   </script>
